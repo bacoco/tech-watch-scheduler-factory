@@ -47,9 +47,11 @@ Après publication, vérifier branche, SHA et fichiers distants. Une archive loc
 ou un commit non relié à une branche ne constitue pas un push. Distinguer tests
 locaux, contrôles CI et recherches réelles sur les projets.
 
-## Blocage constaté pendant cette livraison
+## Historique et publication confirmée
 
-Le connecteur pouvait lire le dépôt mais les écritures `create_file` et
-`create_tree` ont toutes deux reçu HTTP 403 « Resource not accessible by
-integration ». Aucune écriture distante n'a abouti. L'autre accès terminal
-connecté était hors ligne. Voir [le reçu](../verification/github-publication-2026-09-07.json).
+Les premières écritures avaient reçu HTTP 403. Le propriétaire a mis à jour
+les autorisations, puis la publication complète a réussi via le connecteur.
+Voir [le reçu courant](../verification/publication-confirmed-2026-09-07.json) et
+[la livraison](../DELIVERY.md). Le [reçu de refus](../verification/github-publication-2026-09-07.json)
+est historique. Les outils locaux décrits plus haut restent des alternatives ;
+ils n'ont pas servi au transfert effectivement réalisé ici.

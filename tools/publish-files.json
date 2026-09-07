@@ -69,5 +69,6 @@
   "tools/publish_repository.py",
   "verification/README.md",
   "verification/github-publication-2026-09-07.json",
-  "verification/local-2026-09-07.json"
+  "verification/local-2026-09-07.json",
+  "verification/publication-confirmed-2026-09-07.json"
 ]

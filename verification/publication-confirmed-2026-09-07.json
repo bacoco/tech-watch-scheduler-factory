@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-07",
+  "repository": "bacoco/tech-watch-scheduler-factory",
+  "publication_status": "published-and-reread",
+  "branch": "main",
+  "verified_code_commit": "c4e3907115bb547961cfd6b849b80064fdb396a2",
+  "verified_code_tree": "4b242fe8f696383ea536337610bea43cc19d1144",
+  "verification_method": "GitHub main re-read; remote Git tree matches independently calculated local tree exactly",
+  "published_code_file_count": 71,
+  "delivery_file_count_with_this_receipt": 72,
+  "read_back_files": [
+    "README.md",
+    "skills/generate-tech-watch/SKILL.md"
+  ],
+  "readme": {
+    "natural_language_only": true,
+    "python_or_shell_commands": false,
+    "copyable_requests": 3
+  },
+  "local_checks": {
+    "tests_passed": 105,
+    "tests_failed": 0,
+    "tests_command": "python -m unittest discover -s tests -v",
+    "tests_exit_code": 0,
+    "tests_log_sha256": "4642c2ea48a5c4d0b757456cdb6a4574f1c89dde02576fc137154496ae80141d",
+    "repository_check": "PASS: 71 files; Python syntax, JSON, local links, <=200 lines, inventory.",
+    "scope": "Local tests; network and research fixtures are synthetic; not a real target research run"
+  },
+  "remote_ci": {
+    "code_commit": "c4e3907115bb547961cfd6b849b80064fdb396a2",
+    "run_id": 34093712027,
+    "url": "https://github.com/bacoco/tech-watch-scheduler-factory/actions/runs/34093712027",
+    "status": "completed",
+    "conclusion": "failure",
+    "job_steps": [],
+    "runner_id": 0,
+    "tests_executed": false,
+    "cause": "Not established; job failed before any step was executed. Annotation endpoint unavailable through the connector."
+  },
+  "claims": {
+    "target_repos_modified": false,
+    "real_target_research_executed": false,
+    "tasks_activated": false,
+    "full_factory_published": true,
+    "remote_ci_green": false
+  },
+  "notes": [
+    "The owner created the destination and updated the integration permissions.",
+    "Prior 403 receipt is historical and preserved unchanged.",
+    "This receipt references the previous verified full-code commit to avoid a self-referential commit hash."
+  ]
+}
