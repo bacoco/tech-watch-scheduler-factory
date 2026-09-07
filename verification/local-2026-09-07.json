@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-07",
+  "version": "0.2.0",
+  "source_archive": "tech-watch-scheduler-factory-v2.zip",
+  "source_archive_sha256": "1be383f01091d47bcc268e19ad80f35ff9a14dee7c036ed87007fbe735ccc7a0",
+  "kind": "local checks, not a real technology-watch run",
+  "commands": [
+    {
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_public_discovery_marked (test_github.GitHubReads.test_public_discovery_marked) ... ok\ntest_redirect_refused (test_github.GitHubReads.test_redirect_refused) ... ok\ntest_reject_truncated_tree (test_github.GitHubReads.test_reject_truncated_tree) ... ok\ntest_sensitive_paths_excluded (test_github.GitHubReads.test_sensitive_paths_excluded) ... ok\ntest_snapshot_is_not_analysis (test_github.GitHubReads.test_snapshot_is_not_analysis) ... ok\ntest_source_path_allowed (test_github.GitHubReads.test_source_path_allowed) ... ok\ntest_apply_only_directory (test_install.Installation.test_apply_only_directory) ... ok\ntest_changed_checkout_refused (test_install.Installation.test_changed_checkout_refused) ... ok\ntest_existing_human_file_protected (test_install.Installation.test_existing_human_file_protected) ... ok\ntest_extra_payload_refused (test_install.Installation.test_extra_payload_refused) ... ok\ntest_malicious_origin (test_install.Installation.test_malicious_origin) ... ok\ntest_origin_forms (test_install.Installation.test_origin_forms) ... ok\ntest_preview_no_effect (test_install.Installation.test_preview_no_effect) ... ok\ntest_stale_profile_refused (test_install.Installation.test_stale_profile_refused) ... ok\ntest_symlink_target_refused (test_install.Installation.test_symlink_target_refused) ... ok\ntest_target_mismatch (test_install.Installation.test_target_mismatch) ... ok\ntest_unrelated_symlinks_in_product_are_not_our_scope (test_install.Installation.test_unrelated_symlinks_in_product_are_not_our_scope) ... ok\ntest_arxiv_may_be_excluded (test_profiles.Profiles.test_arxiv_may_be_excluded) ... ok\ntest_arxiv_must_be_decided (test_profiles.Profiles.test_arxiv_must_be_decided) ... ok\ntest_draft_allowed (test_profiles.Profiles.test_draft_allowed) ... ok\ntest_duplicate_source (test_profiles.Profiles.test_duplicate_source) ... ok\ntest_existing_requires_pointer (test_profiles.Profiles.test_existing_requires_pointer) ... ok\ntest_invalid_issue_budget (test_profiles.Profiles.test_invalid_issue_budget) ... ok\ntest_path_traversal (test_profiles.Profiles.test_path_traversal) ... ok\ntest_ready_with_unknowns_refused (test_profiles.Profiles.test_ready_with_unknowns_refused) ... ok\ntest_timezone_required (test_profiles.Profiles.test_timezone_required) ... ok\ntest_unknown_evidence (test_profiles.Profiles.test_unknown_evidence) ... ok\ntest_valid (test_profiles.Profiles.test_valid) ... ok\ntest_missing_visibility_refused (test_publication.PublicationVisibility.test_missing_visibility_refused) ... ok\ntest_non_boolean_visibility_refused (test_publication.PublicationVisibility.test_non_boolean_visibility_refused) ... ok\ntest_non_object_metadata_refused (test_publication.PublicationVisibility.test_non_object_metadata_refused) ... ok\ntest_private_allowed_by_default (test_publication.PublicationVisibility.test_private_allowed_by_default) ... ok\ntest_private_still_allowed_with_public_flag (test_publication.PublicationVisibility.test_private_still_allowed_with_public_flag) ... ok\ntest_public_allowed_only_by_explicit_flag (test_publication.PublicationVisibility.test_public_allowed_only_by_explicit_flag) ... ok\ntest_public_denied_by_default (test_publication.PublicationVisibility.test_public_denied_by_default) ... ok\ntest_public_preview_never_runs_remote_commands (test_publication.PublicationVisibility.test_public_preview_never_runs_remote_commands) ... ok\ntest_changed_profile_never_overwrites (test_render.Rendering.test_changed_profile_never_overwrites) ... ok\ntest_context_and_queries_specific (test_render.Rendering.test_context_and_queries_specific) ... ok\ntest_existing_research_not_duplicated (test_render.Rendering.test_existing_research_not_duplicated) ... ok\ntest_files_are_short (test_render.Rendering.test_files_are_short) ... ok\ntest_idempotent (test_render.Rendering.test_idempotent) ... ok\ntest_modified_instruction_detected (test_render.Rendering.test_modified_instruction_detected) ... ok\ntest_no_fake_baseline_or_task (test_render.Rendering.test_no_fake_baseline_or_task) ... ok\ntest_partial_batch_continues (test_render.Rendering.test_partial_batch_continues) ... ok\ntest_symlink_refused (test_render.Rendering.test_symlink_refused) ... ok\ntest_partial_web_research_cannot_advance (test_research_receipts.ResearchReceipts.test_partial_web_research_cannot_advance) ... ok\ntest_stale_research_window_refused (test_research_receipts.ResearchReceipts.test_stale_research_window_refused) ... ok\ntest_t0_cannot_reuse_generation_stage (test_research_receipts.ResearchReceipts.test_t0_cannot_reuse_generation_stage) ... ok\ntest_t0_requires_external_research_record (test_research_receipts.ResearchReceipts.test_t0_requires_external_research_record) ... ok\ntest_t0_research_is_frozen_with_other_evidence (test_research_receipts.ResearchReceipts.test_t0_research_is_frozen_with_other_evidence) ... ok\ntest_tampered_research_refused (test_research_receipts.ResearchReceipts.test_tampered_research_refused) ... ok\ntest_unhashed_journal_refused (test_research_receipts.ResearchReceipts.test_unhashed_journal_refused) ... ok\ntest_update_with_unchanged_code_still_requires_research (test_research_receipts.ResearchReceipts.test_update_with_unchanged_code_still_requires_research) ... ok\ntest_added_baseline_file_detected (test_state.Baseline.test_added_baseline_file_detected) ... ok\ntest_artifact_other_run_refused (test_state.Baseline.test_artifact_other_run_refused) ... ok\ntest_blocker_refused (test_state.Baseline.test_blocker_refused) ... ok\ntest_changed_artifact_refused (test_state.Baseline.test_changed_artifact_refused) ... ok\ntest_draft_cannot_freeze (test_state.Baseline.test_draft_cannot_freeze) ... ok\ntest_fake_delivery_refused (test_state.Baseline.test_fake_delivery_refused) ... ok\ntest_freeze_once (test_state.Baseline.test_freeze_once) ... ok\ntest_incomplete_coverage_refused (test_state.Baseline.test_incomplete_coverage_refused) ... ok\ntest_locked_freeze_refused (test_state.Baseline.test_locked_freeze_refused) ... ok\ntest_no_baseline_to_verify (test_state.Baseline.test_no_baseline_to_verify) ... ok\ntest_receipt_path_traversal (test_state.Baseline.test_receipt_path_traversal) ... ok\ntest_tampered_frozen_baseline_detected (test_state.Baseline.test_tampered_frozen_baseline_detected) ... ok\ntest_excluded_source_cursor_refused (test_updates.Updates.test_excluded_source_cursor_refused) ... ok\ntest_historical_run_id_cannot_be_reused (test_updates.Updates.test_historical_run_id_cannot_be_reused) ... ok\ntest_idempotent_receipt (test_updates.Updates.test_idempotent_receipt) ... ok\ntest_old_paper_allowed (test_updates.Updates.test_old_paper_allowed) ... ok\ntest_omitted_source_preserved (test_updates.Updates.test_omitted_source_preserved) ... ok\ntest_partial_does_not_advance (test_updates.Updates.test_partial_does_not_advance) ... ok\ntest_stale_parent_refused (test_updates.Updates.test_stale_parent_refused) ... ok\ntest_time_cannot_move_backwards (test_updates.Updates.test_time_cannot_move_backwards) ... ok\ntest_all_sources_only_candidates_refused (test_usage_research.UsageResearch.test_all_sources_only_candidates_refused) ... ok\ntest_both_purposes_need_both_question_types (test_usage_research.UsageResearch.test_both_purposes_need_both_question_types) ... ok\ntest_closed_seed_list_refused (test_usage_research.UsageResearch.test_closed_seed_list_refused) ... ok\ntest_code_is_not_runtime_observation (test_usage_research.UsageResearch.test_code_is_not_runtime_observation) ... ok\ntest_custom_source_family_is_supported (test_usage_research.UsageResearch.test_custom_source_family_is_supported) ... ok\ntest_documented_usage_with_explicit_limits_is_valid (test_usage_research.UsageResearch.test_documented_usage_with_explicit_limits_is_valid) ... ok\ntest_duplicate_url_refused (test_usage_research.UsageResearch.test_duplicate_url_refused) ... ok\ntest_example_cannot_claim_real_web_access (test_usage_research.UsageResearch.test_example_cannot_claim_real_web_access) ... ok\ntest_generation_not_misrepresented_as_t0 (test_usage_research.UsageResearch.test_generation_not_misrepresented_as_t0) ... ok\ntest_github_and_arxiv_only_refused (test_usage_research.UsageResearch.test_github_and_arxiv_only_refused) ... ok\ntest_information_watch_without_code_change (test_usage_research.UsageResearch.test_information_watch_without_code_change) ... ok\ntest_missing_browse_access_blocks_ready (test_usage_research.UsageResearch.test_missing_browse_access_blocks_ready) ... ok\ntest_missing_challenge_refused (test_usage_research.UsageResearch.test_missing_challenge_refused) ... ok\ntest_missing_expansion_refused (test_usage_research.UsageResearch.test_missing_expansion_refused) ... ok\ntest_missing_search_trace_refused (test_usage_research.UsageResearch.test_missing_search_trace_refused) ... ok\ntest_no_new_ideas_can_be_honest_result (test_usage_research.UsageResearch.test_no_new_ideas_can_be_honest_result) ... ok\ntest_observed_requires_reference (test_usage_research.UsageResearch.test_observed_requires_reference) ... ok\ntest_one_publisher_repeated_is_not_diversity (test_usage_research.UsageResearch.test_one_publisher_repeated_is_not_diversity) ... ok\ntest_open_web_cannot_be_excluded (test_usage_research.UsageResearch.test_open_web_cannot_be_excluded) ... ok\ntest_pack_carries_usage_and_deep_research_protocol (test_usage_research.UsageResearch.test_pack_carries_usage_and_deep_research_protocol) ... ok\ntest_real_profile_cannot_use_synthetic_example (test_usage_research.UsageResearch.test_real_profile_cannot_use_synthetic_example) ... ok\ntest_same_stack_different_usage_gives_different_instructions (test_usage_research.UsageResearch.test_same_stack_different_usage_gives_different_instructions) ... ok\ntest_source_plan_alone_is_not_research (test_usage_research.UsageResearch.test_source_plan_alone_is_not_research) ... ok\ntest_stack_only_profile_refused (test_usage_research.UsageResearch.test_stack_only_profile_refused) ... ok\ntest_unknown_usage_refused (test_usage_research.UsageResearch.test_unknown_usage_refused) ... ok\ntest_unrelated_question_refused (test_usage_research.UsageResearch.test_unrelated_question_refused) ... ok\ntest_usage_guides_read_before_dependency_manifests (test_usage_research.UsageResearch.test_usage_guides_read_before_dependency_manifests) ... ok\ntest_v1_cannot_be_relabelled_as_complete_research (test_usage_research.UsageResearch.test_v1_cannot_be_relabelled_as_complete_research) ... ok\ntest_wrong_repo_revision_refused (test_usage_research.UsageResearch.test_wrong_repo_revision_refused) ... ok\n\n----------------------------------------------------------------------\nRan 102 tests in 0.723s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python",
+        "tools/check_repository.py"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS: 69 files; Python syntax, JSON, local links, <=200 lines, inventory.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "tech_watch",
+        "generate",
+        "--profile",
+        "examples/image-product.json",
+        "--out",
+        "work"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": 1,\n  \"task_created\": false,\n  \"results\": [\n    {\n      \"profile\": \"examples/image-product.json\",\n      \"repository\": \"example/image-product\",\n      \"status\": \"unchanged\",\n      \"directory\": \"work/example--image-product/scheduler-techno\"\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "tech_watch",
+        "validate",
+        "work/example--image-product/scheduler-techno"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"structurally_valid\": true,\n  \"repository\": \"example/image-product\",\n  \"semantic_analysis_status\": \"ready\",\n  \"task_created\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "tech_watch",
+        "generate",
+        "--profile",
+        "examples/domain-watch.json",
+        "--out",
+        "work/domain"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": 1,\n  \"task_created\": false,\n  \"results\": [\n    {\n      \"profile\": \"examples/domain-watch.json\",\n      \"repository\": \"example/image-product\",\n      \"status\": \"unchanged\",\n      \"directory\": \"work/domain/example--image-product/scheduler-techno\"\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "tech_watch",
+        "validate",
+        "work/domain/example--image-product/scheduler-techno"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"structurally_valid\": true,\n  \"repository\": \"example/image-product\",\n  \"semantic_analysis_status\": \"ready\",\n  \"task_created\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "tools/publish_repository.py",
+        "--owner",
+        "bacoco",
+        "--allow-public"
+      ],
+      "exit_code": 0,
+      "stdout": "PREVIEW: validate, create private bacoco/tech-watch-scheduler-factory if absent, push main, verify exact SHA.\nExisting public destination permitted: True\nNo remote operation. Add --apply to authorize these effects.\n",
+      "stderr": ""
+    }
+  ],
+  "claims": {
+    "real_target_research_executed": false,
+    "tasks_activated": false,
+    "target_repos_modified": false,
+    "test_research_is_synthetic": true,
+    "semantic_truth_proven_by_tests": false
+  },
+  "notes": [
+    "The two synthetic profiles share example/image-product; separate output directories prevent divergent-pack overwrite.",
+    "Source code and research protocol use the corrected v0.2.0 archive, with explicit public-publication support and eight additional tests.",
+    "The GitHub push was attempted through the connector and refused; gh apply has NOT been executed on this machine."
+  ],
+  "tests_passed": 102
+}

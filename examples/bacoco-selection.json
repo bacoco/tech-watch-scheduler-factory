@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "selection_status": "suggested-not-installed",
+  "repositories": [
+    "bacoco/harness-intelligence",
+    "bacoco/weather-energy-risk-cockpit",
+    "bacoco/excenia-hub",
+    "bacoco/vente-aux-encheres",
+    "bacoco/Loriq",
+    "bacoco/chatgpt-cost-router",
+    "bacoco/progressive-disclosure-guard",
+    "bacoco/ShipGuard",
+    "bacoco/inkwell-agent-sandboxes-and-software-factory",
+    "bacoco/BMad-Skills"
+  ]
+}
