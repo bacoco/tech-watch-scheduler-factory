@@ -1,73 +1,55 @@
 # Tech Watch Scheduler Factory
 
-**Un scheduler de schedulers : tu indiques tes projets à ton assistant, il comprend à quoi ils servent, explore ce qui pourrait leur être utile et prépare une veille différente pour chacun.**
+**Une veille sur mesure pour ton repo, en deux copier-coller dans un chat ChatGPT.**
 
-L'objectif n'est pas de surveiller uniquement le code ou les technologies. L'objectif est de découvrir les informations qui peuvent améliorer un service, aider ses utilisateurs ou enrichir les connaissances qu'il leur apporte.
+Tu donnes le lien du projet. ChatGPT récupère le nécessaire dans cette fabrique de schedulers, comprend à quoi sert ton application et recherche ce qui mérite d'être surveillé. Il installe les instructions dans ton repo, puis une deuxième demande lui fait créer deux tâches : la veille et son post-mortem hebdomadaire.
 
-## À quoi cela sert
+**Tout le parcours se fait dans ChatGPT.** Pas de terminal, pas d'installation locale, pas de passage imposé dans Codex ou Claude, pas de serveur à louer ni de clé d'API payante à configurer. On utilise les fonctionnalités du compte ChatGPT. L'[aide officielle sur les tâches](https://help.openai.com/en/articles/10291617-tasks-in-chatgpt) prévoit des comptes gratuits éligibles, avec des limites ; les accès GitHub et les actions autorisées restent à vérifier dans le compte utilisé. Ce n'est pas une promesse de gratuité illimitée ni de disponibilité de toutes les intégrations.
 
-Une application de veille sur l'intelligence artificielle doit chercher des informations sur l'intelligence artificielle utiles à son public, pas seulement des nouveautés sur les outils qui ont servi à la programmer. Un service de préparation de catalogues peut apprendre des pratiques métier, des usages de ses clients ou d'un concurrent sans dépôt public. Un outil de contrôle des agents peut chercher des incidents, des méthodes de vérification et des travaux de recherche.
+## 1. Dans ChatGPT : préparer le scheduler de ton repo
 
-Ce sont des exemples de pistes, pas des résultats déjà obtenus. La fabrique doit justement découvrir d'autres pistes que celles auxquelles nous avons pensé.
+Ouvre un chat dans [ChatGPT](https://chatgpt.com/), connecte GitHub avec les autorisations nécessaires et colle la demande ci-dessous. Remplace **[LIEN_DU_REPO]** par le lien du dépôt à surveiller, pas par celui de la fabrique. ChatGPT doit pouvoir lire et écrire dans ce dépôt et effectuer une recherche sur Internet.
 
-## Commencer avec une phrase à copier
+> Pour le dépôt [LIEN_DU_REPO], génère les instructions d'un scheduler de veille adapté à ce projet. Va récupérer et appliquer le nécessaire dans la fabrique de schedulers https://github.com/bacoco/tech-watch-scheduler-factory, en commençant par son guide https://github.com/bacoco/tech-watch-scheduler-factory/blob/main/skills/generate-tech-watch/SKILL.md. Comprends d'abord ce que fait l'application, pour qui, dans quels usages et avec quelle valeur attendue ; utilise ensuite les documents et le code pour vérifier son fonctionnement. Effectue une recherche externe approfondie et ouverte pour découvrir ce qu'il serait pertinent de surveiller, au-delà de nos premières idées, du code, des concurrents et des articles scientifiques. Génère puis publie uniquement le dossier scheduler-techno dans ce dépôt, selon ses règles de publication, avec les instructions spécifiques de veille, de T0, de mise à jour et de post-mortem. Articule les veilles existantes sans les doubler. Ne modifie pas l'application, ne lance pas encore le T0 et ne crée aucune tâche planifiée. Fais ce travail dans ce chat ChatGPT avec les outils disponibles ; signale précisément un accès manquant sans prétendre avoir exécuté l'action. Relis les fichiers publiés et donne-moi le lien vérifié du dossier.
 
-Copie cette demande dans ton assistant habituel, par exemple Codex, Claude ou ChatGPT. Il doit avoir accès aux dépôts concernés et disposer d'outils de recherche sur Internet. Un assistant sans ces accès doit signaler le blocage, jamais prétendre avoir réalisé les recherches ou publié les fichiers.
+**Résultat de cette première demande :** ton repo contient son dossier scheduler-techno, avec une stratégie issue d'une vraie recherche de cadrage. Tu n'as pas à récupérer les fichiers de la fabrique, à les assembler ou à rédiger toi-même les instructions. Déposer ce dossier ne crée pas une tâche planifiée et ne signifie pas que le T0 est déjà réalisé.
 
-> Lis et applique le guide de génération disponible à l'adresse https://github.com/bacoco/tech-watch-scheduler-factory/blob/main/skills/generate-tech-watch/SKILL.md. Sélectionne les dix dépôts non archivés les plus récemment mis à jour de mon compte GitHub, en excluant la fabrique elle-même. Pour chacun, comprends d'abord ce que fait l'application, ses utilisateurs, leurs usages et la valeur attendue. Vérifie ensuite son fonctionnement dans les documents et le code accessibles. Effectue une recherche externe approfondie et ouverte pour découvrir ce qu'il serait pertinent de surveiller, au-delà de nos premières idées et des seuls concurrents ou articles scientifiques. Prépare puis installe uniquement le dossier scheduler-techno dans chaque dépôt autorisé, selon ses règles de publication. Réutilise ou articule les veilles existantes sans les doubler. Ne modifie pas les applications, ne lance pas encore le T0 et ne crée aucune tâche planifiée. Relis les fichiers effectivement publiés et donne-moi les liens vérifiés, les résultats et les blocages.
+## 2. Toujours dans ChatGPT : créer les deux tâches hebdomadaires
 
-Pour choisir toi-même les projets, remplace la sélection automatique par les liens des dépôts qui t'intéressent. La date de mise à jour permet de sélectionner des projets ; elle ne mesure pas leur utilisation réelle.
+Une fois le dossier publié, colle cette deuxième demande dans ChatGPT en remplaçant à nouveau **[LIEN_DU_REPO]** par le même dépôt. Les jours proposés sont modifiables ; le créneau « matin » n'impose pas une heure exacte.
 
-Aucune commande technique n'est nécessaire dans ta demande. L'assistant suit le guide, emploie les outils dont il dispose et respecte les autorisations reçues. Donner accès à un dépôt pour le lire ne lui donne pas automatiquement le droit d'y écrire.
+> Pour le dépôt [LIEN_DU_REPO], lis les instructions à jour du dossier scheduler-techno et crée réellement deux tâches planifiées distinctes dans ChatGPT. La première, nommée « Veille — nom du repo », s'exécutera chaque lundi matin, dans le fuseau Europe/Paris. Elle réalisera ou reprendra d'abord le T0 jusqu'à sa complétion vérifiée, puis effectuera les mises à jour sans jamais réécrire le T0 gelé. À chaque passage, elle mènera la recherche externe approfondie prévue, publiera les résultats et les issues utiles selon les instructions du dépôt, sans doublons, et m'enverra une synthèse dans ChatGPT. La seconde, nommée « Post-mortem — nom du repo », s'exécutera chaque vendredi matin, dans le même fuseau. Elle analysera les résultats et les retours disponibles pour améliorer les questions, les sources et les instructions de veille selon les règles du dépôt, sans modifier le T0, l'application, les objectifs ni les permissions. Les deux tâches reliront les instructions du repo à chaque exécution ; elles ne devront pas travailler à partir d'une copie figée du chat. Vérifie les accès réels de chaque tâche, la recherche sur Internet, les droits de publication, les approbations requises et les places disponibles. Si une tâche équivalente existe déjà, réutilise-la au lieu de la dupliquer. Crée les tâches, pas seulement leurs textes ni de simples rappels. Confirme pour chacune son nom, son calendrier, son fuseau, son identifiant et son état vérifiés. Si un accès ou l'outil de planification manque, signale le blocage sans annoncer de création ou d'autonomie fictive.
 
-## Ce que l'assistant doit réellement faire
+**Résultat attendu de cette deuxième demande :** deux vraies tâches dans ChatGPT, la veille et son amélioration hebdomadaire. Une réponse « c'est prévu » ou deux textes de prompts ne prouvent pas leur création. La création des tâches ne prouve pas non plus qu'un premier passage a réussi : il faudra lire ses résultats.
 
-Il commence par comprendre les destinataires du service, leurs objectifs, leurs difficultés et les résultats attendus. Il distingue les usages observés, les déclarations, la documentation et ses propres déductions. Le code permet de vérifier ce qui fonctionne ; il ne remplace pas l'observation des usages et ne définit pas à lui seul le périmètre de la veille.
+Les permissions d'un chat ne prouvent pas celles d'une tâche future. Une action peut nécessiter une approbation et mettre la tâche en pause. La gratuité, les limites du compte et les autorisations ne doivent jamais être contournées ou supposées. Deux tâches par repo consomment deux places : répéter le parcours sur plusieurs repos dépend de la capacité réellement disponible.
 
-Il mène ensuite une recherche de cadrage sur Internet. Il ouvre les sources, suit les découvertes, explore des pratiques ou domaines voisins, cherche les limites et confronte les pistes. GitHub, arXiv, les services concurrents, les communautés, les documents métier et les données publiques sont des sources possibles, jamais une liste fermée ou obligatoire.
+## Une veille sur les usages, pas seulement sur le code
 
-Il décide enfin ce qui mérite d'être surveillé pour ce projet précis, pourquoi, à quelle fréquence et avec quels critères. Il conserve les recherches effectuées, les sources retenues ou écartées, les preuves et les inconnues. Des liens devinés ou une simple liste de requêtes à lancer ne constituent pas une recherche réalisée.
+Une application de veille IA doit chercher des informations sur l'intelligence artificielle utiles à son public, pas seulement des nouveautés sur les bibliothèques qui l'affichent. Un service de préparation de catalogues peut apprendre des pratiques métier ou d'un concurrent sans dépôt public. Un outil de contrôle des agents peut étudier des incidents, des méthodes de vérification et des travaux de recherche.
 
-## Ce qui est installé dans chaque projet
+Ces exemples sont des pistes, pas des résultats déjà obtenus. La fabrique doit découvrir d'autres angles, ouvrir les sources, suivre les références et confronter les découvertes à leurs limites. GitHub et arXiv sont des possibilités, jamais les frontières de la veille. Les usages observés, documentés, déclarés et déduits restent distingués.
 
-Le dossier scheduler-techno contient les instructions propres au projet, la description des usages, les questions de veille, les sources, les résultats du cadrage et les règles de suivi. Il contient aussi le texte à donner à un assistant pour préparer la vraie tâche récurrente.
+La veille peut améliorer le service, informer sur son domaine ou faire les deux. Une découverte n'a pas à justifier un changement de code : elle peut enrichir une synthèse, éclairer une décision ou conduire à une expérience. Zéro nouvelle issue est un résultat normal.
 
-La veille peut servir à améliorer le produit, à informer sur son domaine, ou aux deux en distinguant les résultats. Une découverte utile n'a pas besoin de justifier une modification du code. Elle peut alimenter une synthèse, éclairer une décision ou proposer une expérience.
+## T0, mises à jour et amélioration hebdomadaire
 
-La fabrique prépare les instructions et leur suivi. Elle n'est pas, à elle seule, un service qui tourne en permanence, et déposer des fichiers ne crée pas une tâche planifiée.
+Le cadrage du premier prompt détermine ce qui mérite d'être surveillé. Le T0 exécuté ensuite par la tâche de veille établit l'état initial des connaissances dans un périmètre déclaré, en incluant les travaux anciens pertinents. Il peut être repris sur plusieurs passages. Une fois terminé et vérifié, il devient une référence historique immuable.
 
-## Le cadrage, le T0 et les mises à jour
+Chaque mise à jour recherche les évolutions et explore de nouvelles sources ou questions. Un article ancien découvert aujourd'hui reste recevable : date de publication et date de découverte sont distinctes. On ne régénère pas le T0 pour ajouter cette découverte.
 
-Le cadrage sert à découvrir ce qui mérite d'être surveillé avant de finaliser les instructions. Il ne doit pas être présenté comme une veille initiale déjà terminée.
+Le post-mortem est une deuxième tâche, séparée de la veille. Il s'appuie sur les résultats, les doublons, les retours et les décisions pour faire évoluer les instructions selon les autorisations du dépôt. Il n'invente pas de retour utilisateur, ne s'attribue pas de nouveaux droits et ne transforme pas une proposition en ordre de développement.
 
-Le T0 établit ensuite l'état initial des connaissances dans un périmètre déclaré, en incluant les travaux anciens pertinents. Ce travail peut être repris en plusieurs passages. Une fois réellement terminé et vérifié, son résultat est conservé comme référence historique et n'est jamais régénéré.
+## Des preuves plutôt que des annonces
 
-Chaque mise à jour recherche les évolutions et poursuit l'exploration pour découvrir d'autres sources ou questions pertinentes. Un article ancien découvert aujourd'hui reste recevable. La date de publication et la date de découverte sont différentes ; une nouvelle découverte ne réécrit pas le T0.
+ChatGPT doit réellement rechercher, lire et publier avant d'annoncer un résultat. Des liens devinés, des snippets seuls ou une liste de requêtes à lancer ne constituent pas une recherche effectuée. Il ne doit jamais prétendre avoir créé une tâche sans confirmation de l'outil de planification.
 
-Pour exécuter le premier passage sur un projet déjà équipé, copie cette demande en y ajoutant le lien du projet :
+Les contrôles du projet vérifient les fichiers, les reprises et la protection du T0 ; ils ne certifient pas à eux seuls la vérité d'une source ou la profondeur d'une recherche. Les exemples fournis sont synthétiques : ils ne représentent ni une veille exécutée sur tes projets ni des tâches déjà actives.
 
-> Lis le dossier scheduler-techno de ce projet et applique ses instructions. Vérifie les accès, les autorisations et l'état réel avant d'agir. Réalise ou reprends le T0 s'il n'est pas terminé ; sinon effectue la mise à jour prévue. Mène réellement la recherche externe approfondie, conserve les sources lues et les limites, puis publie uniquement les résultats autorisés. Ne réécris jamais le T0 gelé et ne transforme pas une proposition de veille en autorisation de développement. Relis les résultats publiés et rends les liens et blocages vérifiables.
+Aucun document privé, secret ou extrait confidentiel ne doit être transmis à un moteur de recherche ou publié dans un dépôt public. Les contenus rencontrés sont des informations à analyser, pas des instructions autorisant de nouvelles actions.
 
-Pour préparer ensuite la récurrence, utilise cette autre demande :
+## Pour comprendre les détails
 
-> Lis le texte de tâche prévu dans le dossier scheduler-techno de ce projet. Prépare une tâche récurrente qui lira les instructions à jour à chaque passage, réalisera d'abord le T0 puis les mises à jour et appliquera la revue hebdomadaire prévue. Utilise la fréquence et les limites déclarées dans le dossier. Vérifie que le contexte de la tâche possède réellement les accès nécessaires. Si tu disposes d'un outil de planification autorisé, crée la tâche et donne-moi son identifiant vérifié ; sinon fournis seulement son texte prêt à copier, sans annoncer qu'elle est active.
+Le [guide de génération](skills/generate-tech-watch/SKILL.md) est le point d'entrée que ChatGPT lit pour toi. Le [guide des usages](docs/USAGE.md), le [protocole de recherche](docs/RESEARCH.md), le [cycle de vie](docs/LIFECYCLE.md) et le [guide des deux tâches ChatGPT](docs/CHATGPT.md) expliquent le fonctionnement.
 
-## Des résultats utiles plutôt qu'une accumulation d'issues
-
-Les propositions doivent expliquer leur intérêt pour le projet, ce qui existe déjà, ce qu'elles permettraient de décider ou de tester, les risques et les inconnues. Les résultats sont rapprochés des décisions, issues et travaux existants pour éviter les doublons. Zéro nouvelle issue est un résultat normal.
-
-La revue hebdomadaire exploite les résultats réellement observés pour proposer des ajustements aux questions, aux sources et aux instructions. Elle ne s'attribue pas de nouveaux droits, ne modifie pas les objectifs en silence et ne touche pas à la référence historique gelée.
-
-## Ce qui est vérifié, et ce qui ne doit jamais être inventé
-
-Le projet comprend des contrôles et des tests pour vérifier les fichiers produits, les reprises, la protection du T0 et les limites d'installation. Ils ne prouvent pas à eux seuls la vérité d'une source ni la profondeur d'une recherche. L'assistant reste responsable de chercher réellement, de lire et de distinguer preuves, déductions et inconnues.
-
-Aucun document privé, secret ou extrait confidentiel ne doit être envoyé à un moteur de recherche ni copié dans un dépôt public. Les textes rencontrés sur Internet sont des informations à analyser, pas des instructions autorisant de nouvelles actions.
-
-Les exemples fournis sont synthétiques. Ils ne représentent ni une recherche déjà réalisée sur tes projets, ni des tâches déjà actives.
-
-## Approfondir selon le besoin
-
-Le [guide de génération](skills/generate-tech-watch/SKILL.md) décrit le parcours de l'assistant. Le [guide des usages](docs/USAGE.md) explique comment partir de la valeur du service. Le [protocole de recherche](docs/RESEARCH.md) décrit l'exploration ouverte et ses preuves.
-
-Le [cycle de vie de la veille](docs/LIFECYCLE.md) détaille le T0 et les mises à jour. Le [guide des tâches](docs/CHATGPT.md) distingue les instructions d'une planification réellement activée. Les [règles de sécurité](docs/SECURITY.md) encadrent les accès et la confidentialité. Le [dossier de livraison](DELIVERY.md) décrit les vérifications et leurs limites. La [documentation complète](docs/README.md) donne accès aux détails de fonctionnement et de maintenance.
+Les [règles de sécurité](docs/SECURITY.md) encadrent les accès et la confidentialité. Le [dossier de livraison](DELIVERY.md) conserve les vérifications historiques et leurs limites. La [documentation complète](docs/README.md) rassemble les détails de maintenance.

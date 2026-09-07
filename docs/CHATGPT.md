@@ -1,41 +1,53 @@
-# Créer la vraie tâche ChatGPT
+# Deux demandes dans ChatGPT, puis deux tâches distinctes
 
-## Ce que la fabrique fournit
+## Premier prompt : préparer le repo cible
 
-Chaque pack contient `CHATGPT-TASK.md` : cible unique, point d'entrée stable,
-fréquence proposée, aiguillage selon l'état et permissions à vérifier.
-Copier ce texte dans ChatGPT pour demander la création de la tâche.
-L'URL doit viser le repo cible et sa branche réelle, pas la fabrique.
+Le [README](../README.md) contient les deux demandes en langage naturel.
+L'utilisateur ouvre un chat ChatGPT et remplace le lien du repo cible.
+ChatGPT lit la fabrique, comprend les usages, recherche réellement sur Internet,
+puis publie le dossier scheduler-techno selon les autorisations du dépôt.
+Cette première demande ne lance pas le T0 et ne crée aucune tâche.
+Le parcours ne requiert ni terminal utilisateur ni passage dans Codex ou Claude.
 
-La Task doit relire les fichiers à CHAQUE exécution et épingler un SHA pour
-le cycle. Ne pas recopier les instructions entières dans un prompt figé.
-Une évolution autorisée du repo peut ainsi s'appliquer au cycle suivant.
+## Deuxième prompt : activer deux tâches
 
-## Préflight avant activation
+Toujours dans ChatGPT, demander deux tâches distinctes pour le même repo :
+la veille le lundi matin et le post-mortem le vendredi matin, Europe/Paris,
+ou aux créneaux expressément choisis par l'utilisateur.
 
-Vérifier dans l'environnement réel : lecture du repo privé si nécessaire,
-accès web/recherche prévu, écriture des résultats et capacité de créer ou
-mettre à jour les issues conformément à l'autorisation humaine.
-Le plugin visible n'est pas une preuve d'exécution ni d'écriture.
-Les autorisations du chat de génération ne sont pas celles de la future Task.
+Le pack fournit CHATGPT-TASK.md comme entrée vers les instructions de veille.
+La tâche de veille réalise ou reprend le T0, puis passe aux mises à jour.
+Le post-mortem lit POST-MORTEM.md et les résultats observés pour améliorer les
+instructions dans le cadre autorisé. Ne pas fusionner ce second travail dans
+la tâche de veille. La fabrique ne crée aucun objet planifié à la génération.
 
-Après création réelle : conserver ID, horaire, fuseau, autorisations et résultat
-d'un run contrôlé. Sans preuve, état `not_created` ou `unverified`, jamais active.
-Ne pas ajouter dans les instructions un contournement des approbations requises.
-Si la surface exige une confirmation d'écriture incompatible avec l'autonomie,
-le signaler ; publier un rapport en lecture seule n'est pas livrer des issues.
+Chaque tâche conserve le repo cible, sa branche réelle et son point d'entrée.
+Elle relit les instructions à chaque passage et épingle un SHA pour le cycle ;
+elle ne dépend pas d'une copie figée du chat ni de sa mémoire implicite.
+Réutiliser les tâches équivalentes existantes au lieu de créer des doublons.
 
-## Rythme et reprises
+## Accès et création vérifiés
 
-Une seule tâche de veille par repo peut poursuivre le T0 sur plusieurs cycles,
-puis passer à UPDATE. La revue hebdomadaire peut être un second prompt OU une
-branche du même cycle après vérification de sa date ; la fabrique ne crée aucun
-objet Task. Les limites de la plateforme sont à vérifier lors de l'activation.
-Ne pas supposer un nombre fixe de Tasks autorisées ni des fonctions futures.
+Vérifier dans l'environnement réel de chaque tâche la lecture du repo, la
+recherche externe, l'écriture des résultats et les droits sur les issues.
+Les outils et autorisations du chat ne prouvent pas ceux de la tâche future.
+Respecter les approbations requises : elles peuvent mettre une tâche en pause.
+Nommer ce blocage ; ne jamais contourner l'autorisation ni promettre l'autonomie.
 
-## Vérification documentaire du 7 septembre 2026
+Confirmer pour chaque tâche son identifiant, son nom, son calendrier, son fuseau
+et son état réellement retournés par l'outil. Distinguer tâche créée, activée et
+première exécution réussie. Sans outil disponible, aucune création n'est acquise.
+Un simple rappel, un prompt ou un fichier ne remplace pas une tâche exécutante.
 
-La documentation officielle mentionne des tâches utilisant GitHub et rappelle
-que l'accès dépend du compte, de la surface et des permissions autorisées.
-Cela confirme la possibilité de ce modèle, pas la disponibilité des écritures
-pour une tâche particulière. Voir [les références](REFERENCES.md).
+## Gratuité et capacité du compte
+
+Le parcours utilise ChatGPT sans serveur ni clé d'API externe à configurer.
+L'[aide officielle](https://help.openai.com/en/articles/10291617-tasks-in-chatgpt)
+mentionne les comptes gratuits éligibles, sous réserve des fonctionnalités,
+quotas et permissions disponibles. Cela ne garantit pas que tous les comptes
+possèdent les accès GitHub nécessaires ou les mêmes possibilités d'écriture.
+
+Deux tâches par repo nécessitent deux places. Vérifier la capacité effective
+avant création, sans supprimer les autres tâches pour libérer des places.
+Le créneau « matin » ne suppose pas une heure exacte réservée à certains plans.
+Aucun nombre fixe de tâches ni aucune gratuité illimitée n'est promis ici.
