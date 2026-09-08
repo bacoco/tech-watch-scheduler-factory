@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tech-watch-scheduler-factory"
-version = "0.3.1"
-description = "Generate repository-specific research instructions and public watch sites"
+version = "0.4.0"
+description = "Generate repository-specific research, adaptive schedules, runtimes and public watch sites"
 requires-python = ">=3.11"
 
 [tool.setuptools]
