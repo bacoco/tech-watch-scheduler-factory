@@ -36,6 +36,7 @@ def parser():
     d.add_argument('--source-repo', required=True)
     d.add_argument('--edition', required=True)
     d.add_argument('--out', required=True)
+    d.add_argument('--replace-existing', action='store_true')
     for name in ('validate', 'verify-t0', 'freeze-t0', 'record-update'):
         d = s.add_parser(name)
         d.add_argument('watch_directory')
@@ -75,7 +76,8 @@ def main(argv=None):
         elif a.command == 'install':
             result = install(a.pack, a.target, a.apply)
         elif a.command == 'website-render':
-            result = render_public_site(a.source_repo, read_json(a.edition), a.out)
+            result = render_public_site(a.source_repo, read_json(a.edition), a.out,
+                                        a.replace_existing)
         elif a.command == 'validate':
             profile = validate_pack(a.watch_directory)
             result = {'structurally_valid': True, 'repository': profile['repository'],
