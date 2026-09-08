@@ -55,8 +55,11 @@ class ReadmeTests(unittest.TestCase):
                          'main et /(root)', 'ne doit jamais rendre public le repo source',
                          'statut de veille du statut du website'):
             self.assertIn(required, second)
-        self.assertTrue((ROOT / 'docs/WEBSITE.md').is_file())
-        self.assertTrue((ROOT / 'templates/watch/WEBSITE.md').is_file())
+        for path in ('docs/WEBSITE.md', 'templates/watch/WEBSITE.md',
+                     'tools/render_public_website.py', 'tools/create_public_website_repo.py',
+                     'tools/publish_public_website.py'):
+            self.assertTrue((ROOT / path).is_file(), path)
+        self.assertIn('tools/publish_public_website.py', self.text)
 
     def test_scheduled_lifecycle_and_access_remain_explicit(self):
         prompt = self.prompts[1]
