@@ -37,7 +37,8 @@ class WebsiteRendering(unittest.TestCase):
         self.assertEqual(first['edition_count'], second['edition_count'])
 
     def test_archive_preserves_multiple_editions(self):
-        render_public_site('example/image-product', self.edition('2026-09-07', 'watch-2026-09-07'), self.root)
+        render_public_site('example/image-product',
+                           self.edition('2026-09-07', 'watch-2026-09-07'), self.root)
         render_public_site('example/image-product', self.edition(), self.root)
         archive = (self.root / 'archive/index.html').read_text()
         self.assertIn('watch-2026-09-07', archive)
@@ -45,15 +46,25 @@ class WebsiteRendering(unittest.TestCase):
         self.assertEqual(read_json(self.root / 'site.json')['editions'][0]['date'], '2026-09-08')
 
     def test_active_html_is_rejected(self):
-        bad = self.edition(); bad['body_html'] = '<script>alert(1)</script>'
-        with self.assertRaises(ValueError):
-            render_public_site('example/image-product', bad, self.root)
+        for body in ('<script>alert(1)</script>', '<form action="https://evil.invalid"></form>',
+                     '<iframe src="https://evil.invalid"></iframe>'):
+            bad = self.edition(); bad['body_html'] = body
+            with self.subTest(body=body), self.assertRaises(ValueError):
+                render_public_site('example/image-product', bad, self.root)
 
-    def test_existing_slug_is_immutable(self):
+    def test_existing_slug_is_immutable_by_default(self):
         render_public_site('example/image-product', self.edition(), self.root)
         changed = self.edition(); changed['body_html'] = '<p>Different</p>'
         with self.assertRaises(ValueError):
             render_public_site('example/image-product', changed, self.root)
+
+    def test_existing_slug_can_be_replaced_explicitly(self):
+        render_public_site('example/image-product', self.edition(), self.root)
+        changed = self.edition(); changed['body_html'] = '<p>Corrected public edition.</p>'
+        result = render_public_site('example/image-product', changed, self.root, True)
+        self.assertTrue(result['replaced'])
+        self.assertIn('Corrected public edition',
+                      (self.root / 'watch-2026-09-08/index.html').read_text())
 
 
 if __name__ == '__main__':
