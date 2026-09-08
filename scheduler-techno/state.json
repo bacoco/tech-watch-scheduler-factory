@@ -31,6 +31,8 @@
   "source_checkpoints": {},
   "website": {
     "repository": "bacoco/tech-watch-scheduler-factory-website",
-    "status": "not_published"
+    "status": "published_pages_activation_blocked",
+    "commit": "fdf652ac678324956a4f349bd376991d3f578098",
+    "pages_settings_url": "https://github.com/bacoco/tech-watch-scheduler-factory-website/settings/pages"
   }
 }
