@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "repository": "bacoco/tech-watch-scheduler-factory",
+  "cutoff_at": "2026-09-08T21:35:00+02:00",
+  "repo_sha": "4765b7a175a98a0696d52fa354aef1a787090719",
+  "receipt": {
+    "artifacts": [
+      {
+        "path": "runs/t0-2026-09-08/report.md",
+        "sha256": "220c1eb685b2ffa15f79aaf8ae571506307a83321d0b4ece172da60f4427cc69"
+      },
+      {
+        "path": "runs/t0-2026-09-08/research.json",
+        "sha256": "3cf0ade0d33590d72a2f7c1db3a8d663bfcbbeeb5b94461a2b1ef9520cfe9fdb"
+      }
+    ],
+    "blockers": [],
+    "coverage": [
+      {
+        "evidence": "runs/t0-2026-09-08/report.md",
+        "note": "OpenAI Scheduled Tasks current docs and activation constraints reviewed.",
+        "question_id": "q1",
+        "status": "covered"
+      },
+      {
+        "evidence": "runs/t0-2026-09-08/report.md",
+        "note": "GitHub App repository access and Pages branch publication reviewed and tested.",
+        "question_id": "q2",
+        "status": "covered"
+      },
+      {
+        "evidence": "runs/t0-2026-09-08/report.md",
+        "note": "AWS visibility timeout and Google retry/idempotence patterns compared to runtime.",
+        "question_id": "q3",
+        "status": "covered"
+      },
+      {
+        "evidence": "runs/t0-2026-09-08/report.md",
+        "note": "Two-prompt UX and separate public projection assessed through the self-test.",
+        "question_id": "q4",
+        "status": "covered"
+      }
+    ],
+    "cutoff_at": "2026-09-08T21:35:00+02:00",
+    "delivery": {
+      "evidence": "No new issue required; T0 findings are reflected in the public self-test edition and existing contracts.",
+      "status": "verified"
+    },
+    "finished_at": "2026-09-08T21:52:00+02:00",
+    "kind": "t0",
+    "repo_sha": "4765b7a175a98a0696d52fa354aef1a787090719",
+    "repository": "bacoco/tech-watch-scheduler-factory",
+    "research": "runs/t0-2026-09-08/research.json",
+    "run_id": "t0-2026-09-08",
+    "schema_version": 1,
+    "started_at": "2026-09-08T21:35:00+02:00",
+    "status": "complete"
+  },
+  "files": {
+    "runs/t0-2026-09-08/report.md": "220c1eb685b2ffa15f79aaf8ae571506307a83321d0b4ece172da60f4427cc69",
+    "runs/t0-2026-09-08/research.json": "3cf0ade0d33590d72a2f7c1db3a8d663bfcbbeeb5b94461a2b1ef9520cfe9fdb"
+  }
+}
