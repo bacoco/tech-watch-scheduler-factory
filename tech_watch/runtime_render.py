@@ -20,16 +20,16 @@ def logical_jobs(profile):
               'timezone': cadence['timezone'], 'enabled': True,
               'schedule_anchor_note': 'Reset anchor_at to activation time when registering.'}
     result = []
-    for kind, path, stream, priority, retries in (
-        ('watch', 'scheduler-techno/INSTRUCTIONS.md', cadence['watch'], 60, 2),
-        ('postmortem', 'scheduler-techno/POST-MORTEM.md', cadence['postmortem'], 20, 1)):
+    for kind, path, stream, priority, retries, lease in (
+        ('watch', 'scheduler-techno/INSTRUCTIONS.md', cadence['watch'], 60, 2, 180),
+        ('postmortem', 'scheduler-techno/POST-MORTEM.md', cadence['postmortem'], 20, 1, 90)):
         result.append({**common, 'job_id': _job_id(profile['repository'], kind),
             'kind': kind, 'instructions_path': path,
             'schedule': {'anchor_at': profile['analyzed_at'],
                          'interval_days': stream['interval_days']},
             'priority': priority,
             'max_lateness_minutes': max(1440, stream['interval_days'] * 1440),
-            'max_retries': retries,
+            'max_retries': retries, 'lease_minutes': lease,
             'guard': 'baseline-or-completed-run' if kind == 'postmortem' else 'none'})
     return result
 
@@ -106,8 +106,9 @@ def _multiplex_tasks(runtime):
 Crée ou réutilise « Tech Watch Orchestrator — {group} ». À chaque passage, lis le
 registre dans `{repo}`, vérifie sa révision et la garde de migration, sélectionne
 le prochain job dû dans l'ordre due_at → priorité → job_id, et réserve uniquement
-`current-action/job.json`. N'exécute jamais le métier. Si le slot est occupé, ne
-réserve rien. Utilise un dispatch_id déterministe et conserve les reçus Git.
+`current-action/job.json`. N'exécute jamais le métier. Un slot non expiré reste
+occupé ; un lease expiré est récupéré de façon déterministe dans le budget retry.
+Utilise un dispatch_id déterministe et conserve les reçus Git.
 
 ## Worker
 Crée ou réutilise « Tech Watch Worker — {group} ». À chaque passage, lis seulement
