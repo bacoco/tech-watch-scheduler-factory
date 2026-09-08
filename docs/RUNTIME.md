@@ -43,6 +43,8 @@ Schéma v1 :
 - `priority` 0..100 ;
 - `max_lateness_minutes` ;
 - `max_retries` 0..10 ;
+- `lease_minutes` : durée maximale d'une réservation avant récupération ;
+- `guard` canonique ;
 - `enabled`.
 
 `anchor_at` généré par un pack est une proposition. Lors de l'inscription réelle
@@ -51,9 +53,8 @@ rattrapage historique involontaire.
 
 ## Orchestrator
 
-Il lit le registre à un SHA, vérifie qu'aucun dispatch n'est déjà réservé et que
-la garde de migration autorise le multiplexage. Il sélectionne le prochain job
-dû selon :
+Il lit le registre à un SHA, vérifie la garde de migration et sélectionne le
+prochain job dû selon :
 
 1. `due_at` le plus ancien ;
 2. priorité la plus haute ;
@@ -63,12 +64,19 @@ Il écrit seulement un dispatch minimal. Il n'exécute jamais le métier.
 `dispatch_id = hash(job_id | due_at)` : une occurrence garde donc une identité
 stable à travers les retries.
 
+Chaque réservation contient `reserved_at` et `lease_until`. Tant que le lease
+n'est pas expiré, une seconde réservation est refusée. Si le Worker disparaît,
+l'Orchestrator récupère le slot après expiration : la même occurrence repart avec
+le même `dispatch_id` et un numéro de tentative supérieur. Si le budget retry est
+épuisé, l'occurrence est archivée dans `failed` au lieu de bloquer le groupe.
+
 ## Worker
 
 Il lit le dispatch réservé puis retrouve `job_id` dans le registre canonique.
-Le repo et `instructions_path` exécutés proviennent exclusivement du registre.
-Un dispatch contenant un chemin, repo, prompt ou permission supplémentaire est
-refusé. Après exécution, le Worker archive le résultat et libère le slot.
+Le repo, le guard et `instructions_path` exécutés proviennent exclusivement du
+registre. Un dispatch contenant un chemin, repo, prompt ou permission
+supplémentaire est refusé. Après exécution, le Worker archive le résultat et
+libère le slot.
 
 Un échec est retenté jusqu'à `max_retries`, puis l'occurrence passe en `failed`.
 Une réussite passe en `completed`. Une occurrence archivée n'est plus redispatchée.
@@ -107,6 +115,7 @@ sur un autre compte. Leur présence dans Git ne prouve jamais leur création ré
 
 ## Validation locale
 
-Le module `tech_watch.multiplex` valide registre, ordre, idempotence, retry et
-autorité du dispatch. Le CLI fournit `multiplex-validate`, `multiplex-reserve` et
-`multiplex-finish` pour simuler les transitions sans créer de Scheduled Task.
+Le module `tech_watch.multiplex` valide registre, ordre, idempotence, lease,
+retry et autorité du dispatch. Le CLI fournit `multiplex-validate`,
+`multiplex-reserve` et `multiplex-finish` pour simuler les transitions sans créer
+de Scheduled Task.
