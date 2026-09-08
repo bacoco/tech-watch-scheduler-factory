@@ -21,7 +21,7 @@ lit le dispatch réservé, retrouve le job dans le registre canonique et exécut
 uniquement le chemin d'instructions déclaré dans ce registre. Un fichier injecté
 dans la queue ne peut donc pas choisir son propre repo ou chemin d'exécution.
 
-## Queue et idempotence
+## Queue, lease et idempotence
 
 Convention du registre runtime :
 
@@ -32,9 +32,13 @@ Convention du registre runtime :
 - `receipts/` : preuves des transitions et révisions Git.
 
 Le `dispatch_id` dépend seulement de `job_id` et `due_at`. Deux jobs dus ensemble
-sont pris dans l'ordre `due_at`, priorité décroissante, puis `job_id`. Un slot
-occupé interdit une deuxième réservation. Les échecs sont retentés dans la limite
-`max_retries`, puis archivés comme failed.
+sont pris dans l'ordre `due_at`, priorité décroissante, puis `job_id`.
+
+Chaque job définit `lease_minutes`. Le dispatch contient `reserved_at` et
+`lease_until`. Un slot non expiré interdit une deuxième réservation. Si le Worker
+ne revient jamais, l'Orchestrator récupère le slot après expiration et retente la
+même occurrence avec le même `dispatch_id`. Après épuisement de `max_retries`,
+l'occurrence est archivée dans `failed` au lieu de bloquer tout le groupe.
 
 ## Migration dedicated → multiplexed
 
