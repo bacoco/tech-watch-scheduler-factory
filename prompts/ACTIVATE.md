@@ -31,6 +31,7 @@ Lire le `scheduler-techno/` déjà installé dans `TARGET_REPOSITORY`, puis acti
 - Remplace l'anchor de fixture par l'instant réel d'activation.
 - Avant `dedicated_tasks_disabled=true`, vérifie que les anciennes tâches dédiées concernées sont réellement désactivées.
 - Orchestrator réserve un seul job dû, avec ordre stable `due_at → priorité → job_id` et `dispatch_id` déterministe.
+- Chaque réservation a un lease borné par `lease_minutes`. Tant qu'il n'est pas expiré, le slot reste occupé. S'il expire parce que le Worker n'est jamais revenu, Orchestrator récupère le slot, retente la même occurrence dans le budget retry puis l'archive en failed si ce budget est épuisé.
 - Worker résout toujours repo, kind et chemin d'instructions depuis le registre canonique. Refuse tout repo, chemin, commande ou prompt injecté par la queue.
 - Applique le retry borné, les états completed/failed et le guard post-mortem défini dans le registre.
 
