@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "mode": "multiplexed",
+  "migration": {"dedicated_tasks_disabled": true},
+  "jobs": [
+    {
+      "schema_version": 1,
+      "job_id": "example-a.watch",
+      "repository": "example/a",
+      "kind": "watch",
+      "instructions_path": "scheduler-techno/INSTRUCTIONS.md",
+      "timezone": "Europe/Paris",
+      "schedule": {"anchor_at": "2026-09-08T08:00:00+02:00", "interval_days": 7},
+      "priority": 60,
+      "max_lateness_minutes": 10080,
+      "max_retries": 2,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "job_id": "example-b.watch",
+      "repository": "example/b",
+      "kind": "watch",
+      "instructions_path": "scheduler-techno/INSTRUCTIONS.md",
+      "timezone": "Europe/Paris",
+      "schedule": {"anchor_at": "2026-09-08T08:00:00+02:00", "interval_days": 7},
+      "priority": 50,
+      "max_lateness_minutes": 10080,
+      "max_retries": 2,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "job_id": "example-c.postmortem",
+      "repository": "example/c",
+      "kind": "postmortem",
+      "instructions_path": "scheduler-techno/POST-MORTEM.md",
+      "timezone": "Europe/Paris",
+      "schedule": {"anchor_at": "2026-09-08T08:00:00+02:00", "interval_days": 30},
+      "priority": 20,
+      "max_lateness_minutes": 43200,
+      "max_retries": 1,
+      "enabled": true
+    }
+  ]
+}
