@@ -1,1 +1,36 @@
-{"baseline":null,"external_task":{"id":null,"status":"not_created"},"last_completed_update":null,"last_postmortem_at":null,"phase":"T0_REQUIRED","repository":"bacoco/tech-watch-scheduler-factory","runtime":{"mode":"dedicated","status":"not_activated"},"schema_version":1,"source_checkpoints":{},"website":{"repository":"bacoco/tech-watch-scheduler-factory-website","status":"not_published"}}
+{
+  "baseline": {
+    "manifest_sha256": "bfbb1d206c41bf35cb67f441ab07aee312540041edf06474a4aba6bbac3848bc",
+    "cutoff_at": "2026-09-08T21:35:00+02:00"
+  },
+  "external_task": {
+    "status": "superseded_by_runtime",
+    "id": null
+  },
+  "last_completed_update": null,
+  "last_postmortem_at": null,
+  "phase": "UPDATE_READY",
+  "repository": "bacoco/tech-watch-scheduler-factory",
+  "runtime": {
+    "mode": "dedicated",
+    "status": "activated",
+    "tasks_verified": [
+      {
+        "title": "Factory Tech Watch",
+        "cadence": "weekly Monday morning",
+        "timezone": "Europe/Paris"
+      },
+      {
+        "title": "Factory Watch Review",
+        "cadence": "monthly first Friday morning",
+        "timezone": "Europe/Paris"
+      }
+    ]
+  },
+  "schema_version": 1,
+  "source_checkpoints": {},
+  "website": {
+    "repository": "bacoco/tech-watch-scheduler-factory-website",
+    "status": "not_published"
+  }
+}
