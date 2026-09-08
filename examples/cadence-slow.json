@@ -1,0 +1,22 @@
+{
+  "timezone": "Europe/Paris",
+  "watch": {
+    "recommendation": "every two weeks",
+    "reason": "the standards and accessibility-testing ecosystem changes materially but not every day",
+    "interval_days": 14,
+    "min_interval_days": 7,
+    "max_interval_days": 30
+  },
+  "postmortem": {
+    "recommendation": "monthly after at least three watch runs",
+    "reason": "one watch run is too little evidence to judge source quality, noise and duplicates",
+    "interval_days": 30,
+    "min_interval_days": 21,
+    "max_interval_days": 60
+  },
+  "adaptation": {
+    "min_runs_before_change": 3,
+    "decrease_after_consecutive_low_value": 3
+  },
+  "max_new_issues": 2
+}
