@@ -14,6 +14,7 @@
       "priority": 60,
       "max_lateness_minutes": 10080,
       "max_retries": 2,
+      "lease_minutes": 180,
       "enabled": true,
       "guard": "none"
     },
@@ -28,6 +29,7 @@
       "priority": 50,
       "max_lateness_minutes": 10080,
       "max_retries": 2,
+      "lease_minutes": 180,
       "enabled": true,
       "guard": "none"
     },
@@ -42,6 +44,7 @@
       "priority": 20,
       "max_lateness_minutes": 43200,
       "max_retries": 1,
+      "lease_minutes": 90,
       "enabled": true,
       "guard": "baseline-or-completed-run"
     }
