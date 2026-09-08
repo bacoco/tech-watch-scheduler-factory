@@ -8,12 +8,13 @@ import shutil
 import tempfile
 from .common import atomic_json, digest, json_text, no_symlinks, read_json, require
 from .profile import validate_profile
+from .website import website_repository
 from . import __version__
 
 TEMPLATES = Path(__file__).resolve().parent.parent / 'templates' / 'watch'
 DYNAMIC = {'CONTEXTE.md', 'SOURCES.md', 'QUESTIONS.md', 'CHATGPT-TASK.md',
            'profile.json', 'state.json', 'generation.json', 'USAGES.md',
-           'RECHERCHE-INITIALE.md', 'discovery.json'}
+           'RECHERCHE-INITIALE.md', 'discovery.json', 'website.json'}
 
 
 def render_files(p):
@@ -52,6 +53,15 @@ def render_files(p):
     files['QUESTIONS.md'] = '\n'.join(questions) + '\n'
     target = (f"https://github.com/{p['repository']}/blob/"
               f"{quote(p['default_branch'], safe='')}/scheduler-techno/INSTRUCTIONS.md")
+    website_repo = website_repository(p['repository'])
+    files['website.json'] = json_text({
+        'schema_version': 1, 'enabled': True,
+        'source_repository': p['repository'],
+        'public_repository': website_repo,
+        'visibility': 'public', 'branch': 'main', 'root': '/',
+        'pages': {'branch': 'main', 'path': '/'},
+        'paths': {'home': 'index.html', 'archive': 'archive/index.html',
+                  'edition': '<slug>/index.html'}})
     special = ('Ce repo a déjà une veille : résoudre INTEGRATION_REQUIRED ; ne pas '
                'lancer une seconde collecte.' if p['integration']['mode'] == 'reuse-existing'
                else 'Premier passage : T0. Après gel vérifié : UPDATE. Reprendre les runs incomplets.')
@@ -71,8 +81,15 @@ Le domaine couvert peut être la finalité même de la veille, sans modification
 Lis les capacités et les autorisations réelles avant tout effet.
 {special}
 La limite proposée est {p['cadence']['max_new_issues']} nouvelles issues par cycle, zéro est normal.
-Publie les résultats/états uniquement dans ce repo, selon l'autorisation humaine
-et les contrôles d'écriture ; ne modifie jamais le produit ni la baseline gelée.
+Les résultats canoniques, états, T0 et reçus restent uniquement dans le repo source.
+Lis `WEBSITE.md` et `website.json`. Au premier run, vérifie `{website_repo}` ; s'il
+n'existe pas et si l'outil GitHub le permet, crée ce dépôt séparé en PUBLIC, branche
+`main`, puis publie le site statique à sa racine. N'y copie jamais instructions,
+baseline, runs, code privé ou données privées. Après chaque T0/UPDATE achevé,
+rafraîchis home, archive et édition publique selon WEBSITE.md, sans doublon.
+Active GitHub Pages sur `main` + `/(root)` si la capacité administrative existe ;
+sinon publie les fichiers, rends le lien Settings/Pages et nomme le blocage.
+Un blocage du website n'annule pas un run de veille réussi : rapporte les deux statuts.
 Aucune issue de veille n'autorise implicitement une tâche de développement.
 Si un accès manque, rends le blocage et ne prétends pas avoir livré ou avancé l'état.
 Après création réelle, fournis l'identifiant et les capacités vérifiées.
