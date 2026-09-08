@@ -9,6 +9,7 @@ from .render import generate, validate_pack
 from .snapshot import snapshot
 from .state import freeze_t0, verify_t0
 from .updates import record_update
+from .website import render_public_site
 
 
 def parser():
@@ -31,6 +32,10 @@ def parser():
     d.add_argument('pack')
     d.add_argument('target')
     d.add_argument('--apply', action='store_true')
+    d = s.add_parser('website-render', help='render one validated public edition into a static site')
+    d.add_argument('--source-repo', required=True)
+    d.add_argument('--edition', required=True)
+    d.add_argument('--out', required=True)
     for name in ('validate', 'verify-t0', 'freeze-t0', 'record-update'):
         d = s.add_parser(name)
         d.add_argument('watch_directory')
@@ -69,6 +74,8 @@ def main(argv=None):
             result = snapshot(GitHub(), a.repo, a.out, a.max_files)
         elif a.command == 'install':
             result = install(a.pack, a.target, a.apply)
+        elif a.command == 'website-render':
+            result = render_public_site(a.source_repo, read_json(a.edition), a.out)
         elif a.command == 'validate':
             profile = validate_pack(a.watch_directory)
             result = {'structurally_valid': True, 'repository': profile['repository'],
