@@ -1,4 +1,4 @@
-"""Protect the two-copy-paste ChatGPT-only public entry point."""
+"""Protect the short two-copy-paste ChatGPT entry point and canonical prompts."""
 import re
 import unittest
 from pathlib import Path
@@ -10,6 +10,8 @@ class ReadmeTests(unittest.TestCase):
     def setUp(self):
         self.text = (ROOT / 'README.md').read_text(encoding='utf-8')
         self.prompts = re.findall(r'^> (.+)$', self.text, re.MULTILINE)
+        self.prepare = (ROOT / 'prompts/PREPARE.md').read_text(encoding='utf-8')
+        self.activate = (ROOT / 'prompts/ACTIVATE.md').read_text(encoding='utf-8')
 
     def test_no_code_blocks_or_shell_commands(self):
         self.assertNotIn('```', self.text)
@@ -17,44 +19,44 @@ class ReadmeTests(unittest.TestCase):
             r'(?im)^\s*(?:python\d*\s|pip\s|git clone\s|gh\s|cd\s|\$\s)', self.text))
         self.assertNotIn('python', self.text.lower())
 
-    def test_exactly_two_copyable_requests_for_an_explicit_repo(self):
+    def test_exactly_two_short_copyable_requests(self):
         self.assertEqual(len(self.prompts), 2)
         for prompt in self.prompts:
             self.assertIn('[LIEN_DU_REPO]', prompt)
             self.assertIn('ChatGPT', prompt)
+            self.assertIn('TARGET_REPOSITORY', prompt)
+            self.assertLess(len(prompt), 450)
+        self.assertIn('/prompts/PREPARE.md', self.prompts[0])
+        self.assertIn('/prompts/ACTIVATE.md', self.prompts[1])
 
-    def test_first_request_generates_cadence_runtime_and_site_contracts(self):
-        prompt = self.prompts[0]
-        self.assertIn('https://github.com/bacoco/tech-watch-scheduler-factory/blob/main/'
-                      'skills/generate-tech-watch/SKILL.md', prompt)
-        for required in ('recherche externe approfondie', 'scheduler-techno',
-                         'cadence de veille', 'cadence de post-mortem',
-                         'runtime.mode=dedicated', 'multiplexed', 'registry_repository',
-                         'RUNTIME', 'multiplex-jobs.json', 'WEBSITE.md',
+    def test_prepare_prompt_carries_full_generation_contract(self):
+        for required in ('skills/generate-tech-watch/SKILL.md',
+                         'recherche externe approfondie', 'scheduler-techno/',
+                         'cadence.watch', 'cadence.postmortem', 'dedicated',
+                         'multiplexed', 'registry_repository', 'RUNTIME.md',
+                         'multiplex-jobs.json', 'WEBSITE.md', 'website.json',
                          'ne lance pas le T0'):
-            self.assertIn(required, prompt)
-        self.assertNotIn('chaque lundi', prompt)
+            self.assertIn(required, self.prepare)
 
-    def test_second_request_activates_exact_declared_runtime(self):
-        prompt = self.prompts[1]
-        for required in ('runtime.mode=dedicated', 'runtime.mode=multiplexed',
-                         'Veille —', 'Post-mortem —', 'Tech Watch Orchestrator',
-                         'Tech Watch Worker', 'dedicated_tasks_disabled=true',
-                         'dispatch déterministe', 'retry borné',
-                         'résolution du chemin uniquement depuis le registre canonique'):
-            self.assertIn(required, prompt)
-        self.assertIn('cadence `watch`', prompt)
-        self.assertIn('cadence `postmortem`', prompt)
-        self.assertNotIn('chaque lundi matin', prompt)
-        self.assertNotIn('chaque vendredi matin', prompt)
+    def test_activate_prompt_carries_runtime_and_website_contract(self):
+        for required in ('runtime.mode', 'Veille —', 'Post-mortem —',
+                         'Tech Watch Orchestrator', 'Tech Watch Worker',
+                         'dedicated_tasks_disabled=true', 'dispatch_id',
+                         'retry borné', 'registre canonique', 'RECHERCHE.md',
+                         'repo PUBLIC séparé `*-website`', 'GitHub Pages',
+                         'home + archive', 'watch_status', 'website_status'):
+            self.assertIn(required, self.activate)
 
-    def test_public_website_remains_separate(self):
-        first, second = self.prompts
-        self.assertIn('nom-du-repo-website', first)
-        for required in ('repo public `*-website`', 'GitHub Pages', 'main et /(root)',
-                         'ne rends jamais public le repo source'):
-            self.assertIn(required, second)
-        for path in ('docs/WEBSITE.md', 'templates/watch/WEBSITE.md',
+    def test_readme_explicitly_says_website_is_generated_and_updated(self):
+        for required in ('site public généré puis mis à jour automatiquement',
+                         'génère le site puis le met à jour',
+                         'À chaque exécution suivante validée',
+                         'reconstruire la home + l\'archive'):
+            self.assertIn(required, self.text)
+
+    def test_canonical_prompt_files_exist(self):
+        for path in ('prompts/README.md', 'prompts/PREPARE.md', 'prompts/ACTIVATE.md',
+                     'docs/WEBSITE.md', 'templates/watch/WEBSITE.md',
                      'tools/render_public_website.py', 'tools/create_public_website_repo.py',
                      'tools/publish_public_website.py'):
             self.assertTrue((ROOT / path).is_file(), path)
