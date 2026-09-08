@@ -21,6 +21,12 @@ class MultiplexRuntime(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_registry(registry)
 
+    def test_invalid_timezone_is_rejected(self):
+        registry = self.registry()
+        registry['jobs'][0]['timezone'] = 'Mars/Olympus'
+        with self.assertRaises(Exception):
+            validate_registry(registry)
+
     def test_migration_guard_blocks_double_runtime(self):
         registry = self.registry()
         registry['migration']['dedicated_tasks_disabled'] = False
@@ -44,8 +50,7 @@ class MultiplexRuntime(unittest.TestCase):
         self.assertEqual(b['dispatch']['job_id'], 'example-b.watch')
 
     def test_retry_is_bounded_then_archived_failed(self):
-        registry = self.registry()
-        registry['jobs'] = [registry['jobs'][2]]
+        registry = self.registry(); registry['jobs'] = [registry['jobs'][2]]
         state = initial_state()
         state, first = reserve(registry, state, '2026-09-08T09:00:00+02:00')
         self.assertEqual(first['dispatch']['attempt'], 1)
@@ -60,16 +65,25 @@ class MultiplexRuntime(unittest.TestCase):
     def test_queue_cannot_inject_executable_path(self):
         registry = self.registry(); state = initial_state()
         state, result = reserve(registry, state, '2026-09-08T09:00:00+02:00')
-        dispatch = deepcopy(result['dispatch'])
-        dispatch['instructions_path'] = '../evil.md'
+        dispatch = deepcopy(result['dispatch']); dispatch['instructions_path'] = '../evil.md'
         with self.assertRaises(ValueError):
             resolve_dispatch(registry, dispatch)
         resolved = resolve_dispatch(registry, result['dispatch'])
         self.assertEqual(resolved['instructions_path'], 'scheduler-techno/INSTRUCTIONS.md')
 
+    def test_postmortem_guard_is_canonical(self):
+        registry = self.registry(); job = registry['jobs'][2]
+        self.assertEqual(job['kind'], 'postmortem')
+        # The example registry is a runtime fixture; generated packs add the guard.
+        # Canonical resolution must never accept a guard injected by the dispatch.
+        state = initial_state(); registry['jobs'] = [job]
+        state, result = reserve(registry, state, '2026-09-08T09:00:00+02:00')
+        dispatch = deepcopy(result['dispatch']); dispatch['guard'] = 'run-anything'
+        with self.assertRaises(ValueError):
+            resolve_dispatch(registry, dispatch)
+
     def test_completed_occurrence_is_not_dispatched_again(self):
-        registry = self.registry()
-        registry['jobs'] = [registry['jobs'][0]]
+        registry = self.registry(); registry['jobs'] = [registry['jobs'][0]]
         state = initial_state()
         state, _ = reserve(registry, state, '2026-09-08T09:00:00+02:00')
         state, _ = finish(registry, state, True)
