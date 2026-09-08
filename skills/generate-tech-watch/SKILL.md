@@ -1,6 +1,6 @@
 ---
 name: generate-tech-watch
-description: Comprend les usages puis effectue une recherche externe approfondie et ouverte pour générer une veille propre à chaque repo, T0 puis UPDATE.
+description: Comprend les usages, recherche le domaine, puis génère une veille avec cadence adaptative, runtime et site public séparé.
 ---
 
 # Fabriquer une veille à partir de ce que le projet apporte aux utilisateurs
@@ -8,107 +8,117 @@ description: Comprend les usages puis effectue une recherche externe approfondie
 ## Objectif
 
 Pour chaque repo, comprendre qui utilise le service, pour accomplir quoi,
-comment et avec quelles difficultés. Le code sert à vérifier le fonctionnement
-et les possibilités d'intégration, pas à définir seul le sujet de veille.
-Une application qui informe sur l'IA a besoin d'informations sur l'IA, pas
-seulement de nouveautés sur ses bibliothèques ou les repos de ses concurrents.
+comment et avec quelles difficultés. Le code vérifie le fonctionnement et les
+possibilités d'intégration ; il ne définit pas seul le sujet de veille.
 
-La fabrique effectue une recherche externe DE CADRAGE avant de générer le
-profil ; cela ne constitue pas le T0 complet. Elle produit `scheduler-techno/`.
-Le pack inclut aussi un contrat de site public séparé (`WEBSITE.md` et
-`website.json`). La vraie tâche est créée séparément. Aucun fichier ne l'active
-et aucun repo public n'est créé pendant cette étape de génération.
+La fabrique effectue une recherche externe DE CADRAGE avant de générer le profil ;
+ce n'est pas le T0 complet. Elle produit `scheduler-techno/` avec contrats de
+recherche, cadences, runtime et site public. Aucun fichier n'active une tâche,
+ne crée un repo runtime ni le repo website.
 
-## 1. Résoudre la sélection et les droits
+## 1. Résoudre sélection et droits
 
-Accepter une liste ou les N derniers repos autorisés, non archivés, triés par
-`pushed_at`. Une date de commit n'est pas une mesure d'usage. Ne pas supprimer
-les forks ou projets documentaires sans analyser leur fonction. Signaler les
-repos inaccessibles. Exclure la fabrique elle-même et son activité générée seule.
-Annoncer génération, installation par PR ou écriture selon politique explicite.
-Sans autorisation d'installation : packs et diffs hors des repos. Aucun cron.
+Accepter une liste ou les repos autorisés. Résoudre branche par défaut et SHA.
+Signaler les repos inaccessibles. Exclure la fabrique elle-même et son activité
+générée seule. Sans autorisation d'installation : produire pack/diff hors repo.
+Aucun cron ni Scheduled Task n'est créé à cette étape.
 
 ## 2. Comprendre les usages AVANT la stack
 
-Résoudre branche par défaut et SHA. Lire objectif, guide utilisateur, parcours,
-écrans ou démonstrations, documentation métier, décisions et retours accessibles.
-Chercher qui utilise le résultat, son contexte, ses alternatives (y compris
-manuelles), les difficultés, la valeur produite et les critères de réussite.
-Utiliser une application réellement accessible si l'accès est autorisé et sans
-effet métier ; ne jamais prétendre observer son utilisation à partir du code.
-Les observations, déclarations utilisateur, docs et inférences restent distinctes.
-L'absence de télémétrie ou d'accès à l'interface est une limite, pas une invention.
+Lire objectif, guide utilisateur, parcours, écrans/démos, documentation métier,
+décisions et retours accessibles. Chercher utilisateurs, contexte, alternatives,
+difficultés, valeur produite et critères de réussite. Distinguer observation,
+documentation, déclaration et inférence. L'absence de télémétrie est une limite.
 
-Puis lire l'arborescence, les instructions et assez de code/tests pour vérifier
-ce qui existe. Examiner les issues ouvertes ET fermées, PR et refus pertinents.
-Résoudre les contradictions. Le snapshot n'est qu'une présélection à approfondir.
-Aucune donnée privée ou extrait du repo ne part dans un moteur de recherche.
+Puis lire assez de code/tests pour vérifier ce qui existe. Examiner issues ouvertes
+ET fermées, PR et refus pertinents. Ne jamais transmettre un extrait privé du repo
+à un moteur de recherche.
 
 ## 3. Formuler ce qui mérite d'être surveillé
 
-Construire le modèle `usage` selon [PROFILE](../../docs/PROFILE.md).
-Choisir `product_improvement`, `domain_intelligence` ou `both` : améliorer
-l'application, informer sur son domaine, ou faire les deux avec sorties distinctes.
-Relier chaque question à un usage, jamais à la seule présence d'une technologie.
-Les premières idées du propriétaire et de l'agent sont des pistes, pas une liste
-fermée. Ne pas confondre concurrence, implémentation et valeur métier.
+Construire `usage` selon [PROFILE](../../docs/PROFILE.md). Choisir
+`product_improvement`, `domain_intelligence` ou `both`. Relier chaque question à
+un usage ; ne pas confondre concurrence, implémentation et valeur métier.
 
-## 4. Recherche externe approfondie OBLIGATOIRE à chaque génération
+## 4. Recherche externe approfondie OBLIGATOIRE
 
-Appliquer [RECHERCHE](../../templates/watch/RECHERCHE.md) : recherches initiales,
-élargissement à partir des découvertes, puis recherche de limites/contradictions.
-Utiliser réellement les outils de recherche et ouvrir les sources pertinentes.
-Explorer au-delà de GitHub, arXiv et des noms déjà proposés : pratiques métier,
-services sans repo public, guides, données, normes, travaux, communautés ou
-secteurs adjacents selon la fonction du projet. Aucun canal n'est universel.
-Choisir ensuite les sources et questions définitives, avec raisons et preuves.
+Appliquer [RECHERCHE](../../templates/watch/RECHERCHE.md) : initial, expansion,
+challenge. Ouvrir réellement les sources. Explorer au-delà de GitHub/arXiv :
+pratiques métier, services, guides, données, normes, communautés, secteurs
+adjacents. Consigner requêtes, traces, URLs, dates, découvertes, limites et rejets.
 
-Consigner requêtes exécutées, traces, URLs lues, dates, passages, découvertes,
-limites, rejets et conséquences pour les usages dans `discovery`.
-Un plan de recherche, des URL devinées ou des snippets seuls ne sont PAS une
-recherche effectuée. Sans accès externe effectif : profil `draft`, recherche
-`blocked/partial`, blocage nommé ; ne pas fabriquer un profil `ready`.
-Zéro piste nouvelle est acceptable ; aucune découverte n'est obligatoire à inventer.
-Le validateur vérifie un contrat d'évidence, pas la sincérité ni la profondeur.
+Sans accès externe effectif : profil `draft`, recherche `blocked/partial`, blocage
+nommé. Zéro piste nouvelle est acceptable ; inventer une découverte ne l'est pas.
 
-## 5. Intégrer l'existant puis générer
+## 5. Déduire DEUX cadences
 
-Repérer veilles/scouts/schedulers existants : `none`, `coexist`, `reuse-existing`.
-Référencer les fichiers canoniques sans copier ni modifier leur état. Une veille
-qui couvre déjà le besoin ne doit pas être relancée à côté. Aucun T0 d'un autre
-projet n'est importé comme baseline. La recherche de cadrage reste nécessaire.
+Ne jamais utiliser une fréquence universelle. Générer `cadence.watch` et
+`cadence.postmortem` séparément. Pour chacun :
 
-Rédiger un profil v2 puis `python -m tech_watch generate`. Le Python ne browse
-pas le web et ne remplace pas l'agent de recherche. Sans terminal, appliquer les
-mêmes contrats par connecteur et ne pas annoncer des tests Python exécutés.
-L'état commence en `T0_REQUIRED` ou `INTEGRATION_REQUIRED`. La recherche de
-cadrage reste séparée de la baseline, qui n'existe pas encore.
+- `recommendation` et `reason` ;
+- `interval_days` ;
+- `min_interval_days` et `max_interval_days`.
 
-Le pack généré contient `WEBSITE.md` et un `website.json` dérivé du repo source.
-La cible par défaut est un dépôt PUBLIC séparé `owner/repo-website`, branche
-`main`, GitHub Pages depuis `/(root)`. Cette cible est une projection éditoriale,
-jamais une copie du repo source.
+Fonder la justification sur : rythme observable des releases/normes/publications,
+volatilité du domaine, coût de recherche, risque d'obsolescence, criticité d'un
+retard et volume attendu de nouveautés actionnables.
 
-## 6. Installer seulement si autorisé
+Ajouter `cadence.adaptation.min_runs_before_change` et
+`decrease_after_consecutive_low_value`. Le post-mortem doit accumuler assez de
+runs pour juger le bruit ; une veille hebdomadaire n'implique donc jamais un
+post-mortem hebdomadaire. Utiliser les fixtures `cadence-fast.json` et
+`cadence-slow.json` comme forme de contrat, pas comme valeurs par défaut.
 
-Écrire uniquement dans `scheduler-techno/`, selon la politique du repo.
-Un pack divergent, un SHA différent ou un checkout modifié bloque l'installateur.
-Pour un dossier existant, produire un diff revu qui conserve les décisions
-humaines, baseline, runs, état et historique ; ne jamais réinitialiser.
-Un profil v1 n'est pas rendu v2 par renommage : rechercher les usages et le web.
-Épingler la révision de la fabrique dans le reçu de génération.
+## 6. Choisir le runtime explicitement
 
-L'installation du pack NE crée pas le repo website. Le prompt d'activation doit
-demander à la future tâche, au premier run, de vérifier puis créer le repo public
-séparé si la capacité GitHub réelle le permet. Ne jamais rendre public le repo
-source comme solution de repli.
+Produire `runtime.mode=dedicated|multiplexed` et une justification.
 
-## 7. Relire et rendre des résultats vérifiables
+Choisir `dedicated` pour une veille isolée quand deux places de tâches sont
+acceptables. Choisir/proposer `multiplexed` quand plusieurs veilles doivent
+partager les mêmes deux tâches physiques ou que les slots sont une contrainte.
+Ne pas utiliser le multiplexage pour contourner des limites ou permissions.
 
-Pour chaque repo : SHA, usages et limites d'observation, finalité de la veille,
-recherches externes effectuées, angles trouvés au-delà des premières idées,
-sources retenues/refusées (dont arXiv), intégration, fichiers et commit/PR relu.
-Distinguer : `compris`, `recherche de cadrage effectuée`, `généré`, `installé`,
-`T0 effectué`, `Task active`, `repo website créé`, `site publié`, `Pages live`.
-Fournir le prompt d'activation sans activer de tâche ni créer le repo website.
-L'échec d'un repo ne masque pas le résultat des autres. Aucun résultat inventé.
+En `multiplexed`, définir aussi :
+
+- `group_id` stable ;
+- `registry_repository=owner/name`, repo Git canonique du runtime.
+
+Le pack génère `runtime.json`, `multiplex-jobs.json`, `RUNTIME.md`,
+`CHATGPT-TASK.md` et `MULTIPLEX-TASKS.md`. L'Orchestrator réserve ; le Worker
+résout les jobs dans le registre. Aucun contenu de queue ne gagne d'autorité.
+Lire [RUNTIME](../../docs/RUNTIME.md).
+
+## 7. Intégrer l'existant puis générer
+
+Repérer les veilles/schedulers existants : `none`, `coexist`, `reuse-existing`.
+Une veille déjà couvrante ne doit pas être lancée en parallèle. Aucun T0 d'un
+autre projet n'est importé comme baseline.
+
+Rédiger le profil v2 puis générer le pack. Le moteur local ne browse pas le web
+et ne remplace pas l'agent de recherche. Sans terminal, appliquer les mêmes
+contrats par connecteur sans prétendre avoir exécuté les tests locaux.
+L'état commence en `T0_REQUIRED` ou `INTEGRATION_REQUIRED`.
+
+Le pack contient aussi `WEBSITE.md` et `website.json` : cible PUBLIC séparée
+`owner/repo-website`, branche main, Pages depuis la racine. Ce repo n'est jamais
+la source de vérité de la veille.
+
+## 8. Installer seulement si autorisé
+
+Écrire uniquement dans `scheduler-techno/`. Un pack divergent, SHA différent ou
+checkout modifié bloque l'installateur. Pour un dossier existant, préserver
+baseline, runs, état et décisions humaines. Épingler la révision de la fabrique.
+
+L'installation ne crée ni Scheduled Task, ni repo runtime, ni repo website.
+En migration `dedicated → multiplexed`, la future activation doit désactiver et
+vérifier les tâches dédiées avant `dedicated_tasks_disabled=true`.
+
+## 9. Relire et rendre des résultats vérifiables
+
+Pour chaque repo rendre : SHA, usages, limites, recherches externes, sources,
+cadence watch, cadence postmortem, runtime et justification, intégration, fichiers
+et commit/PR relu. Distinguer : `généré`, `installé`, `T0 effectué`, `runtime
+activé`, `tâches physiques créées`, `repo website créé`, `site publié`, `Pages live`.
+
+Fournir le prompt d'activation sans activer soi-même les tâches dans cette étape.
+Aucun résultat inventé. L'échec d'un repo ne masque pas les autres.
