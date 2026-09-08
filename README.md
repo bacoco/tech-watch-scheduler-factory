@@ -30,7 +30,7 @@ Le repo surveillé reste la source de vérité, même s'il est privé. Le site e
 
 Le site attendu est statique et navigable : une home avec la dernière édition, une archive, une page stable par édition, un CSS local et `.nojekyll`. Le scheduler peut adapter le design au projet, mais il doit conserver les routes et la séparation privé/public. Si le dépôt website existe déjà, il doit le réutiliser au lieu d'en créer un doublon.
 
-Les scripts techniques de référence sont `tools/render_public_website.py` pour assembler le site et `tools/create_public_website_repo.py` pour le bootstrap GitHub explicite. Ils sont surtout utiles pour les tests, la maintenance locale ou un environnement disposant d'un accès GitHub explicite ; le parcours principal reste le chat et le scheduler avec leurs outils connectés. Le détail est dans [docs/WEBSITE.md](docs/WEBSITE.md).
+Les scripts techniques de référence sont `tools/render_public_website.py` pour assembler le site, `tools/create_public_website_repo.py` pour créer ou vérifier le dépôt public séparé et `tools/publish_public_website.py` pour publier le site rendu en un commit Git atomique puis, si demandé, activer GitHub Pages. Ils sont surtout utiles pour les tests, la maintenance locale ou un environnement disposant d'un accès GitHub explicite ; le parcours principal reste le chat et le scheduler avec leurs outils connectés. Le détail est dans [docs/WEBSITE.md](docs/WEBSITE.md).
 
 ## Une veille sur les usages, pas seulement sur le code
 
