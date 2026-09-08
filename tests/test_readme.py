@@ -14,8 +14,7 @@ class ReadmeTests(unittest.TestCase):
     def test_no_code_blocks_or_shell_commands(self):
         self.assertNotIn('```', self.text)
         self.assertIsNone(re.search(
-            r'(?im)^\s*(?:python\d*\s|pip\s|git clone\s|gh\s|cd\s|\$\s)',
-            self.text))
+            r'(?im)^\s*(?:python\d*\s|pip\s|git clone\s|gh\s|cd\s|\$\s)', self.text))
         self.assertNotIn('python', self.text.lower())
 
     def test_exactly_two_copyable_requests_for_an_explicit_repo(self):
@@ -23,65 +22,62 @@ class ReadmeTests(unittest.TestCase):
         for prompt in self.prompts:
             self.assertIn('[LIEN_DU_REPO]', prompt)
             self.assertIn('ChatGPT', prompt)
-        self.assertNotIn('dix dépôts', self.text)
 
-    def test_first_request_fetches_factory_and_installs_only(self):
+    def test_first_request_generates_cadence_runtime_and_site_contracts(self):
         prompt = self.prompts[0]
-        self.assertIn(
-            'https://github.com/bacoco/tech-watch-scheduler-factory/blob/main/'
-            'skills/generate-tech-watch/SKILL.md', prompt)
-        self.assertTrue((ROOT / 'skills/generate-tech-watch/SKILL.md').is_file())
+        self.assertIn('https://github.com/bacoco/tech-watch-scheduler-factory/blob/main/'
+                      'skills/generate-tech-watch/SKILL.md', prompt)
         for required in ('recherche externe approfondie', 'scheduler-techno',
-                         'ne lance pas encore le T0',
-                         'ne crée aucune tâche planifiée'):
+                         'cadence de veille', 'cadence de post-mortem',
+                         'runtime.mode=dedicated', 'multiplexed', 'registry_repository',
+                         'RUNTIME', 'multiplex-jobs.json', 'WEBSITE.md',
+                         'ne lance pas le T0'):
             self.assertIn(required, prompt)
+        self.assertNotIn('chaque lundi', prompt)
 
-    def test_second_request_creates_two_separate_weekly_tasks(self):
+    def test_second_request_activates_exact_declared_runtime(self):
         prompt = self.prompts[1]
-        for required in ('deux tâches planifiées distinctes', 'Veille —',
-                         'Post-mortem —', 'lundi matin', 'vendredi matin',
-                         'Europe/Paris', 'identifiant', 'état vérifiés',
-                         'pas seulement leurs textes', 'simples rappels',
-                         'réutilise-la', 'ne devront pas travailler à partir '
-                         "d'une copie figée"):
+        for required in ('runtime.mode=dedicated', 'runtime.mode=multiplexed',
+                         'Veille —', 'Post-mortem —', 'Tech Watch Orchestrator',
+                         'Tech Watch Worker', 'dedicated_tasks_disabled=true',
+                         'dispatch déterministe', 'retry borné',
+                         'résolution du chemin uniquement depuis le registre canonique'):
             self.assertIn(required, prompt)
+        self.assertIn('cadence `watch`', prompt)
+        self.assertIn('cadence `postmortem`', prompt)
+        self.assertNotIn('chaque lundi matin', prompt)
+        self.assertNotIn('chaque vendredi matin', prompt)
 
-    def test_public_website_is_part_of_the_two_step_journey(self):
+    def test_public_website_remains_separate(self):
         first, second = self.prompts
-        for required in ('WEBSITE.md', 'website.json', 'nom-du-repo-website',
-                         'ne crée pas encore ce repo public'):
-            self.assertIn(required, first)
-        for required in ('créer réellement en PUBLIC', 'GitHub Pages',
-                         'main et /(root)', 'ne doit jamais rendre public le repo source',
-                         'statut de veille du statut du website'):
+        self.assertIn('nom-du-repo-website', first)
+        for required in ('repo public `*-website`', 'GitHub Pages', 'main et /(root)',
+                         'ne rends jamais public le repo source'):
             self.assertIn(required, second)
         for path in ('docs/WEBSITE.md', 'templates/watch/WEBSITE.md',
                      'tools/render_public_website.py', 'tools/create_public_website_repo.py',
                      'tools/publish_public_website.py'):
             self.assertTrue((ROOT / path).is_file(), path)
-        self.assertIn('tools/publish_public_website.py', self.text)
 
-    def test_scheduled_lifecycle_and_access_remain_explicit(self):
-        prompt = self.prompts[1]
-        for required in ('T0 gelé', 'mises à jour', 'reliront les instructions',
-                         'approbations requises', 'outil de planification',
-                         "sans annoncer de création ou d'autonomie fictive"):
-            self.assertIn(required, prompt)
-        for required in ('accès', 'ne crée pas une tâche planifiée',
-                         'jamais prétendre', 'synthétiques'):
-            self.assertIn(required, self.text)
+    def test_runtime_and_cadence_examples_exist(self):
+        for path in ('examples/cadence-fast.json', 'examples/cadence-slow.json',
+                     'examples/multiplex-registry.json', 'docs/RUNTIME.md',
+                     'templates/watch/RUNTIME.md'):
+            self.assertTrue((ROOT / path).is_file(), path)
 
-    def test_free_access_is_conditional_and_sourced(self):
+    def test_access_and_proof_language_remains_explicit(self):
         for required in ('comptes gratuits éligibles', 'avec des limites',
-                         'https://help.openai.com/en/articles/10291617-',
-                         'Ce n\'est pas une promesse de gratuité illimitée'):
+                         'permissions', 'ne prouvent pas', 'synthétiques'):
             self.assertIn(required, self.text)
+        self.assertIn('https://help.openai.com/en/articles/10291617-', self.text)
 
-    def test_detailed_task_guide_matches_two_task_journey(self):
+    def test_detailed_task_guide_is_runtime_aware(self):
         text = (ROOT / 'docs/CHATGPT.md').read_text(encoding='utf-8')
-        self.assertIn('deux tâches distinctes', text)
+        self.assertIn('dedicated', text)
+        self.assertIn('multiplexed', text)
+        self.assertIn('Orchestrator', text)
+        self.assertIn('Worker', text)
         self.assertIn('POST-MORTEM.md', text)
-        self.assertNotIn('branche du même cycle', text)
 
 
 if __name__ == '__main__':
