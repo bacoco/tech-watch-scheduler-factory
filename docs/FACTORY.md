@@ -1,56 +1,66 @@
 # Contrat de génération
 
-## Trois objets différents
+## Objets différents
 
-La fabrique est exécutée à la demande, éventuellement par une future tâche
-chargée de découvrir des repos. Elle **produit des spécifications de tâches**.
-Chaque repo conserve ses propres instructions. La tâche ChatGPT est un objet
-externe, créé et autorisé séparément ; aucun fichier ne la rend active.
+La fabrique produit des spécifications de veille. Chaque repo conserve ses
+instructions et son état métier. Les Scheduled Tasks ChatGPT, le repo runtime
+multiplexé éventuel et le repo website sont des objets externes créés séparément ;
+aucun fichier ne les rend actifs à lui seul.
 
 ## Ordre obligatoire
 
 Sélection → compréhension des usages à SHA fixe → recherche externe ouverte
-→ choix justifié des questions/sources → profil → génération → validation
-→ installation autorisée → relecture. La recherche de cadrage doit être réelle
-avant un profil prêt ; elle ne constitue ni T0 complet ni UPDATE exécutée.
+→ questions/sources → cadences séparées → choix du runtime → profil → génération
+→ validation → installation autorisée → relecture.
+
+La recherche de cadrage doit être réelle avant un profil prêt ; elle ne constitue
+ni T0 complet ni UPDATE exécutée.
 
 ## Profil sémantique
 
-L'agent hôte fait l'analyse. Le renderer ne décide pas qu'arXiv serait pertinent
-parce que le nom du repo contient « AI ». Il valide la présence de preuves,
-de questions et de décisions, mais ne peut pas vérifier leur sincérité.
-Un profil `ready` requiert usages, questions reliées, recherche externe tracée,
-contraintes, preuves et aucun inconnu bloquant. Le score ou la popularité d'un repo ne constitue pas une preuve.
+L'agent hôte fait l'analyse. Le renderer valide structure, preuves et cohérence,
+mais ne certifie ni sincérité ni profondeur. Un profil `ready` requiert usages,
+questions reliées, recherche tracée, contraintes, preuves et aucun inconnu bloquant.
 
-## Fichiers communs et parties spécifiques
+La cadence n'est pas un défaut technique : `watch` et `postmortem` sont deux
+hypothèses métier séparées avec raisons, intervalle et bornes. Le runtime est
+également explicite : `dedicated` ou `multiplexed`.
 
-`templates/watch/` contient uniquement la mécanique commune. `CONTEXTE.md`,
-`SOURCES.md`, `QUESTIONS.md`, `USAGES.md`, `RECHERCHE-INITIALE.md`,
-`discovery.json`, `CHATGPT-TASK.md` et `profile.json` sont produits
-à partir du profil spécifique. Ne pas laisser de placeholders non résolus.
-Les sources retenues ont des requêtes de recherche et des cibles réelles à
-résoudre ; elles ne sont pas limitées à une liste initiale fermée.
+## Fichiers communs et spécifiques
 
-## Cohabitation
+`templates/watch/` porte la mécanique commune. Le pack spécifique produit notamment
+`CONTEXTE.md`, `SOURCES.md`, `QUESTIONS.md`, `USAGES.md`, `CHATGPT-TASK.md`,
+`runtime.json`, `multiplex-jobs.json`, `MULTIPLEX-TASKS.md`, `website.json`,
+`profile.json`, `state.json` et les journaux de cadrage.
+
+En `dedicated`, `multiplex-jobs.json` est vide. En `multiplexed`, il contient les
+jobs logiques watch/postmortem à inscrire dans le registre Git canonique.
+
+## Cohabitation métier
 
 Sans veille existante : `none`, routine T0 puis UPDATE.
-Veille existante distincte : `coexist`, préciser la frontière et dédupliquer.
+Veille existante distincte : `coexist`, préciser frontière et dédupliquer.
 Veille couvrant déjà le besoin : `reuse-existing`, état INTEGRATION_REQUIRED ;
-la tâche produite vérifie l'intégration et ne démarre pas une seconde collecte.
-Une décision explicite est nécessaire avant passage au mode de recherche.
+ne pas démarrer une seconde collecte.
+
+## Cohabitation runtime
+
+Ne jamais exécuter la même veille via `dedicated` et `multiplexed` en parallèle.
+Une migration exige preuve de désactivation de l'ancien mode avant activation du
+nouveau. Le multiplexage partage les tâches physiques ; il ne fusionne pas les
+états T0/UPDATE des repos.
 
 ## Installer sans casser
 
 La CLI travaille hors repo cible par défaut. `install` affiche le contenu qu'elle
-copierait ; `--apply` autorise une copie locale seulement. Le git origin de la
-cible doit correspondre au profil, son HEAD doit être le SHA analysé et ses fichiers
-trackés ne doivent pas avoir de modifications locales. Un dossier divergent bloque.
+copierait ; `--apply` autorise une copie locale seulement. Le git origin, HEAD et
+état du checkout doivent correspondre au profil. Un dossier divergent bloque.
 La mise à jour d'une installation se fait via un diff revu, jamais une remise à
-zéro de l'état. Aucun code métier ni workflow n'est modifié par l'installateur.
+zéro. Aucun code métier ni workflow n'est modifié par l'installateur.
 
 ## Lot de repos
 
 Un échec ne doit ni abandonner silencieusement le reste, ni être maquillé.
-Le bilan `generation-report.json` distingue succès et blocages. Générer pour
-la même révision de profil est idempotent ; un profil différent n'écrase pas
-un pack existant. Choisir un nouveau répertoire de sortie pour comparer.
+`generation-report.json` distingue succès et blocages. Générer pour la même
+révision de profil est idempotent ; un profil différent n'écrase pas un pack
+existant. Choisir un nouveau répertoire de sortie pour comparer.
