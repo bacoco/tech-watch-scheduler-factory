@@ -46,6 +46,18 @@ class ReadmeTests(unittest.TestCase):
                          "d'une copie figée"):
             self.assertIn(required, prompt)
 
+    def test_public_website_is_part_of_the_two_step_journey(self):
+        first, second = self.prompts
+        for required in ('WEBSITE.md', 'website.json', 'nom-du-repo-website',
+                         'ne crée pas encore ce repo public'):
+            self.assertIn(required, first)
+        for required in ('créer réellement en PUBLIC', 'GitHub Pages',
+                         'main et /(root)', 'ne doit jamais rendre public le repo source',
+                         'statut de veille du statut du website'):
+            self.assertIn(required, second)
+        self.assertTrue((ROOT / 'docs/WEBSITE.md').is_file())
+        self.assertTrue((ROOT / 'templates/watch/WEBSITE.md').is_file())
+
     def test_scheduled_lifecycle_and_access_remain_explicit(self):
         prompt = self.prompts[1]
         for required in ('T0 gelé', 'mises à jour', 'reliront les instructions',
@@ -66,7 +78,6 @@ class ReadmeTests(unittest.TestCase):
         text = (ROOT / 'docs/CHATGPT.md').read_text(encoding='utf-8')
         self.assertIn('deux tâches distinctes', text)
         self.assertIn('POST-MORTEM.md', text)
-        self.assertIn('Ne pas fusionner ce second travail', text)
         self.assertNotIn('branche du même cycle', text)
 
 

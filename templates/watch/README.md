@@ -14,10 +14,15 @@ L'état machine est [state.json](state.json), le profil est [profile.json](profi
 | Construire la référence historique | [T0](T0.md) |
 | Suivre évolutions et découvertes | [UPDATE](UPDATE.md) |
 | Publier des propositions utiles | [ISSUES](ISSUES.md) |
+| Publier le site public séparé | [WEBSITE](WEBSITE.md) |
 | Vérifier les outils réellement disponibles | [CAPABILITIES](CAPABILITIES.md) |
 | Créer séparément la vraie tâche | [CHATGPT-TASK](CHATGPT-TASK.md) |
 | États, gel et reçus autonomes | [RECEIPTS](RECEIPTS.md) |
 | Améliorer les instructions | [POST-MORTEM](POST-MORTEM.md) |
+
+`website.json` nomme le repo public cible et sa source GitHub Pages. Sa présence
+ne crée pas le repo et n'active pas Pages ; ces effets appartiennent à la tâche
+réelle, après vérification des capacités et permissions.
 
 Ce dossier est une spécification de tâche. Sa présence ne prouve pas
 l'activation d'un scheduler, la réalisation du T0 ou l'existence d'issues.
