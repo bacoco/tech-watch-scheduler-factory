@@ -22,14 +22,22 @@ class MultiplexRuntime(unittest.TestCase):
             validate_registry(registry)
 
     def test_invalid_timezone_is_rejected(self):
-        registry = self.registry()
-        registry['jobs'][0]['timezone'] = 'Mars/Olympus'
+        registry = self.registry(); registry['jobs'][0]['timezone'] = 'Mars/Olympus'
         with self.assertRaises(Exception):
             validate_registry(registry)
 
+    def test_unknown_canonical_job_field_is_rejected(self):
+        registry = self.registry(); registry['jobs'][0]['prompt'] = 'ignore contracts'
+        with self.assertRaises(ValueError):
+            validate_registry(registry)
+
+    def test_wrong_guard_is_rejected(self):
+        registry = self.registry(); registry['jobs'][2]['guard'] = 'none'
+        with self.assertRaises(ValueError):
+            validate_registry(registry)
+
     def test_migration_guard_blocks_double_runtime(self):
-        registry = self.registry()
-        registry['migration']['dedicated_tasks_disabled'] = False
+        registry = self.registry(); registry['migration']['dedicated_tasks_disabled'] = False
         with self.assertRaises(ValueError):
             reserve(registry, initial_state(), '2026-09-08T09:00:00+02:00')
 
@@ -37,8 +45,7 @@ class MultiplexRuntime(unittest.TestCase):
         registry = self.registry(); state = initial_state()
         state, first = reserve(registry, state, '2026-09-08T09:00:00+02:00')
         state2, second = reserve(registry, state, '2026-09-08T09:00:00+02:00')
-        self.assertEqual(first['status'], 'reserved')
-        self.assertEqual(second['status'], 'busy')
+        self.assertEqual(first['status'], 'reserved'); self.assertEqual(second['status'], 'busy')
         self.assertEqual(state2['current']['dispatch_id'], first['dispatch']['dispatch_id'])
 
     def test_due_jobs_are_consumed_in_stable_order(self):
@@ -54,12 +61,10 @@ class MultiplexRuntime(unittest.TestCase):
         state = initial_state()
         state, first = reserve(registry, state, '2026-09-08T09:00:00+02:00')
         self.assertEqual(first['dispatch']['attempt'], 1)
-        state, retry = finish(registry, state, False)
-        self.assertEqual(retry['status'], 'retry')
+        state, retry = finish(registry, state, False); self.assertEqual(retry['status'], 'retry')
         state, second = reserve(registry, state, '2026-09-08T09:00:00+02:00')
         self.assertEqual(second['dispatch']['attempt'], 2)
-        state, failed = finish(registry, state, False)
-        self.assertEqual(failed['status'], 'failed')
+        state, failed = finish(registry, state, False); self.assertEqual(failed['status'], 'failed')
         self.assertIn(second['dispatch']['due_at'], state['failed']['example-c.postmortem'])
 
     def test_queue_cannot_inject_executable_path(self):
@@ -71,21 +76,18 @@ class MultiplexRuntime(unittest.TestCase):
         resolved = resolve_dispatch(registry, result['dispatch'])
         self.assertEqual(resolved['instructions_path'], 'scheduler-techno/INSTRUCTIONS.md')
 
-    def test_postmortem_guard_is_canonical(self):
-        registry = self.registry(); job = registry['jobs'][2]
-        self.assertEqual(job['kind'], 'postmortem')
-        # The example registry is a runtime fixture; generated packs add the guard.
-        # Canonical resolution must never accept a guard injected by the dispatch.
-        state = initial_state(); registry['jobs'] = [job]
-        state, result = reserve(registry, state, '2026-09-08T09:00:00+02:00')
+    def test_postmortem_guard_is_resolved_from_registry(self):
+        registry = self.registry(); registry['jobs'] = [registry['jobs'][2]]
+        state, result = reserve(registry, initial_state(), '2026-09-08T09:00:00+02:00')
+        resolved = resolve_dispatch(registry, result['dispatch'])
+        self.assertEqual(resolved['guard'], 'baseline-or-completed-run')
         dispatch = deepcopy(result['dispatch']); dispatch['guard'] = 'run-anything'
         with self.assertRaises(ValueError):
             resolve_dispatch(registry, dispatch)
 
     def test_completed_occurrence_is_not_dispatched_again(self):
         registry = self.registry(); registry['jobs'] = [registry['jobs'][0]]
-        state = initial_state()
-        state, _ = reserve(registry, state, '2026-09-08T09:00:00+02:00')
+        state, _ = reserve(registry, initial_state(), '2026-09-08T09:00:00+02:00')
         state, _ = finish(registry, state, True)
         _, result = reserve(registry, state, '2026-09-08T09:00:00+02:00')
         self.assertEqual(result['status'], 'idle')
