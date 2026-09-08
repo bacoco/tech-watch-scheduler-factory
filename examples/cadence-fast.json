@@ -1,7 +1,7 @@
 {
   "timezone": "Europe/Paris",
   "watch": {
-    "recommendation": "daily on working days",
+    "recommendation": "daily",
     "reason": "high-volatility security and provider changes can become stale within days",
     "interval_days": 1,
     "min_interval_days": 1,
