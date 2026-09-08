@@ -9,10 +9,14 @@ from .common import instant, relative, repository, require
 from .fields import text
 
 JOB_RE = re.compile(r'[a-z0-9][a-z0-9_.-]{1,119}\Z')
+JOB_FIELDS = {'schema_version', 'job_id', 'repository', 'kind', 'instructions_path',
+              'timezone', 'schedule', 'priority', 'max_lateness_minutes',
+              'max_retries', 'enabled', 'guard', 'schedule_anchor_note'}
 
 
 def validate_job(job):
     require(isinstance(job, dict), 'job must be an object')
+    require(set(job) <= JOB_FIELDS, f'unknown job fields: {sorted(set(job) - JOB_FIELDS)}')
     require(job.get('schema_version') == 1, 'job schema_version=1 required')
     require(isinstance(job.get('job_id'), str) and JOB_RE.fullmatch(job['job_id']),
             'invalid job_id')
@@ -22,7 +26,8 @@ def validate_job(job):
     require(job['instructions_path'].startswith('scheduler-techno/'),
             'job instructions must stay under scheduler-techno/')
     schedule = job['schedule']
-    require(isinstance(schedule, dict), 'job schedule required')
+    require(isinstance(schedule, dict) and set(schedule) == {'anchor_at', 'interval_days'},
+            'job schedule only accepts anchor_at and interval_days')
     anchor = instant(schedule['anchor_at'])
     interval = schedule['interval_days']
     require(type(interval) is int and 1 <= interval <= 365, 'invalid interval_days')
@@ -35,15 +40,21 @@ def validate_job(job):
     require(type(job['max_retries']) is int and 0 <= job['max_retries'] <= 10,
             'max_retries must be 0..10')
     require(type(job.get('enabled', True)) is bool, 'enabled must be boolean')
+    expected_guard = 'baseline-or-completed-run' if job['kind'] == 'postmortem' else 'none'
+    require(job.get('guard', expected_guard) == expected_guard,
+            f'invalid guard for {job["kind"]}')
     return anchor
 
 
 def validate_registry(registry):
     require(isinstance(registry, dict) and registry.get('schema_version') == 1,
             'registry schema_version=1 required')
+    require(set(registry) == {'schema_version', 'mode', 'migration', 'jobs'},
+            'registry contains unknown fields')
     require(registry.get('mode') == 'multiplexed', 'registry must be multiplexed')
     migration = registry.get('migration')
-    require(isinstance(migration, dict), 'migration object required')
+    require(isinstance(migration, dict)
+            and set(migration) == {'dedicated_tasks_disabled'}, 'invalid migration object')
     require(type(migration.get('dedicated_tasks_disabled')) is bool,
             'migration dedicated_tasks_disabled must be boolean')
     jobs = registry.get('jobs')
@@ -131,7 +142,8 @@ def resolve_dispatch(registry, dispatch):
     require(dispatch['dispatch_id'] == expected, 'dispatch identity mismatch')
     job = jobs[dispatch['job_id']]
     return {'repository': job['repository'], 'kind': job['kind'],
-            'instructions_path': job['instructions_path'], 'job': job}
+            'instructions_path': job['instructions_path'], 'guard': job.get('guard', 'none'),
+            'job': job}
 
 
 def finish(registry, state, success):
