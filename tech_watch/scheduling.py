@@ -2,7 +2,7 @@
 from zoneinfo import ZoneInfo
 
 from .fields import text
-from .common import require
+from .common import repository, require
 
 
 def _stream(value, name, default_interval=None):
@@ -71,5 +71,6 @@ def runtime_model(profile):
         group = runtime.get('group_id')
         text(group, 'runtime group_id')
         require('/' not in group and len(group) <= 80, 'invalid runtime group_id')
-        result['group_id'] = group
+        registry_repository = repository(runtime.get('registry_repository'))
+        result.update(group_id=group, registry_repository=registry_repository)
     return result
