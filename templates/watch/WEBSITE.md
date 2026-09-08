@@ -14,12 +14,14 @@ La cible DOIT être un dépôt GitHub public séparé, branche `main`, site stat
 Au premier run de veille :
 
 1. Vérifier si le dépôt public cible existe réellement.
-2. S'il n'existe pas et si les droits le permettent, le créer en PUBLIC.
+2. S'il n'existe pas et si les droits le permettent, le créer en PUBLIC avec
+   une branche `main` initialisée.
 3. S'il existe mais est privé, ne jamais changer sa visibilité silencieusement :
    bloquer la publication et demander une décision explicite.
-4. Initialiser seulement des fichiers de site public : `index.html`, `assets/`,
+4. Générer seulement des fichiers de site public : `index.html`, `assets/`,
    `archive/index.html`, pages d'éditions, `.nojekyll` et métadonnées publiques.
-5. Activer GitHub Pages sur `main` + `/(root)` si une capacité administrative
+5. Publier ces fichiers sur `main`, idéalement dans un seul commit atomique.
+6. Activer GitHub Pages sur `main` + `/(root)` si une capacité administrative
    réelle est disponible. Sinon publier les fichiers, donner l'URL Settings/Pages
    exacte et signaler que l'activation reste bloquée ; ne pas prétendre que le
    site est live.
@@ -53,13 +55,14 @@ Le site est statique et navigable :
 Les liens internes sont relatifs. Le rendu doit être responsive et lisible sans
 JavaScript. Les tableaux larges doivent rester consultables sur mobile.
 
-## Idempotence et historique
+## Idempotence, corrections et historique
 
 Une édition existante avec le même slug et le même contenu est un no-op.
 Une édition existante avec le même slug mais un contenu différent ne doit pas
-être écrasée silencieusement. Pour une correction, documenter la révision ou
-utiliser un nouveau slug selon la politique du projet. Ne jamais supprimer
-l'archive pour reconstruire la home.
+être écrasée silencieusement. Une correction du même document est permise
+uniquement comme remplacement explicite et traçable ; sinon utiliser un nouveau
+slug selon la politique du projet. Ne jamais supprimer l'archive pour reconstruire
+la home.
 
 Après chaque T0 achevé ou UPDATE achevé, publier ou rafraîchir le site seulement
 avec les éléments de ce run qui sont autorisés publiquement. Un échec du site

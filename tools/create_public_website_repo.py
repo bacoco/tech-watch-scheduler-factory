@@ -48,7 +48,8 @@ def main():
     owner, name = target_name(args.source_repo)
     target = f'{owner}/{name}'
     plan = {'source_repository': args.source_repo, 'public_repository': target,
-            'visibility': 'public', 'pages_source': 'main:/(root)', 'apply': args.apply}
+            'visibility': 'public', 'default_branch': 'main',
+            'pages_source': 'main:/(root)', 'apply': args.apply}
     if not args.apply:
         print(json.dumps(plan, indent=2))
         return 0
@@ -56,8 +57,9 @@ def main():
     status, repo = request('GET', f'/repos/{quote(owner)}/{quote(name)}', allow_404=True)
     if status == 404:
         endpoint = '/user/repos' if viewer.get('login') == owner else f'/orgs/{quote(owner)}/repos'
-        _, repo = request('POST', endpoint, {'name': name, 'private': False,
-                                             'description': f'Public static watch site for {args.source_repo}'})
+        _, repo = request('POST', endpoint, {
+            'name': name, 'private': False, 'auto_init': True,
+            'description': f'Public static watch site for {args.source_repo}'})
     elif repo.get('private'):
         raise SystemExit('BLOCKED: target repository already exists but is private')
     result = {'public_repository': target, 'html_url': repo.get('html_url'),
@@ -65,8 +67,11 @@ def main():
               'pages_settings_url': f'https://github.com/{target}/settings/pages'}
     if args.enable_pages:
         try:
-            _, pages = request('POST', f'/repos/{quote(owner)}/{quote(name)}/pages',
-                               {'source': {'branch': 'main', 'path': '/'}})
+            page_status, pages = request('GET',
+                f'/repos/{quote(owner)}/{quote(name)}/pages', allow_404=True)
+            if page_status == 404:
+                _, pages = request('POST', f'/repos/{quote(owner)}/{quote(name)}/pages',
+                                   {'source': {'branch': 'main', 'path': '/'}})
             result['pages'] = {'status': 'enabled', 'url': pages.get('html_url')}
         except SystemExit as exc:
             result['pages'] = {'status': 'blocked', 'reason': str(exc)}
