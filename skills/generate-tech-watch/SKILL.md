@@ -15,7 +15,9 @@ seulement de nouveautés sur ses bibliothèques ou les repos de ses concurrents.
 
 La fabrique effectue une recherche externe DE CADRAGE avant de générer le
 profil ; cela ne constitue pas le T0 complet. Elle produit `scheduler-techno/`.
-La vraie tâche est créée séparément. Aucun fichier ne l'active.
+Le pack inclut aussi un contrat de site public séparé (`WEBSITE.md` et
+`website.json`). La vraie tâche est créée séparément. Aucun fichier ne l'active
+et aucun repo public n'est créé pendant cette étape de génération.
 
 ## 1. Résoudre la sélection et les droits
 
@@ -82,6 +84,11 @@ mêmes contrats par connecteur et ne pas annoncer des tests Python exécutés.
 L'état commence en `T0_REQUIRED` ou `INTEGRATION_REQUIRED`. La recherche de
 cadrage reste séparée de la baseline, qui n'existe pas encore.
 
+Le pack généré contient `WEBSITE.md` et un `website.json` dérivé du repo source.
+La cible par défaut est un dépôt PUBLIC séparé `owner/repo-website`, branche
+`main`, GitHub Pages depuis `/(root)`. Cette cible est une projection éditoriale,
+jamais une copie du repo source.
+
 ## 6. Installer seulement si autorisé
 
 Écrire uniquement dans `scheduler-techno/`, selon la politique du repo.
@@ -91,11 +98,17 @@ humaines, baseline, runs, état et historique ; ne jamais réinitialiser.
 Un profil v1 n'est pas rendu v2 par renommage : rechercher les usages et le web.
 Épingler la révision de la fabrique dans le reçu de génération.
 
+L'installation du pack NE crée pas le repo website. Le prompt d'activation doit
+demander à la future tâche, au premier run, de vérifier puis créer le repo public
+séparé si la capacité GitHub réelle le permet. Ne jamais rendre public le repo
+source comme solution de repli.
+
 ## 7. Relire et rendre des résultats vérifiables
 
 Pour chaque repo : SHA, usages et limites d'observation, finalité de la veille,
 recherches externes effectuées, angles trouvés au-delà des premières idées,
 sources retenues/refusées (dont arXiv), intégration, fichiers et commit/PR relu.
 Distinguer : `compris`, `recherche de cadrage effectuée`, `généré`, `installé`,
-`T0 effectué`, `Task active`. Fournir le prompt d'activation sans activer de tâche.
+`T0 effectué`, `Task active`, `repo website créé`, `site publié`, `Pages live`.
+Fournir le prompt d'activation sans activer de tâche ni créer le repo website.
 L'échec d'un repo ne masque pas le résultat des autres. Aucun résultat inventé.
