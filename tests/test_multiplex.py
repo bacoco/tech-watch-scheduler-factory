@@ -16,14 +16,18 @@ class MultiplexRuntime(unittest.TestCase):
         self.assertEqual(len(jobs), 3)
 
     def test_duplicate_job_id_is_rejected(self):
-        registry = self.registry()
-        registry['jobs'][1]['job_id'] = registry['jobs'][0]['job_id']
+        registry = self.registry(); registry['jobs'][1]['job_id'] = registry['jobs'][0]['job_id']
         with self.assertRaises(ValueError):
             validate_registry(registry)
 
     def test_invalid_timezone_is_rejected(self):
         registry = self.registry(); registry['jobs'][0]['timezone'] = 'Mars/Olympus'
         with self.assertRaises(Exception):
+            validate_registry(registry)
+
+    def test_invalid_lease_is_rejected(self):
+        registry = self.registry(); registry['jobs'][0]['lease_minutes'] = 1
+        with self.assertRaises(ValueError):
             validate_registry(registry)
 
     def test_unknown_canonical_job_field_is_rejected(self):
@@ -47,6 +51,25 @@ class MultiplexRuntime(unittest.TestCase):
         state2, second = reserve(registry, state, '2026-09-08T09:00:00+02:00')
         self.assertEqual(first['status'], 'reserved'); self.assertEqual(second['status'], 'busy')
         self.assertEqual(state2['current']['dispatch_id'], first['dispatch']['dispatch_id'])
+
+    def test_expired_slot_is_recovered_and_retried(self):
+        registry = self.registry(); registry['jobs'] = [registry['jobs'][0]]
+        state, first = reserve(registry, initial_state(), '2026-09-08T09:00:00+02:00')
+        self.assertEqual(first['dispatch']['attempt'], 1)
+        state, second = reserve(registry, state, '2026-09-08T12:01:00+02:00')
+        self.assertEqual(second['status'], 'reserved')
+        self.assertTrue(second['recovered_expired'])
+        self.assertEqual(second['dispatch']['dispatch_id'], first['dispatch']['dispatch_id'])
+        self.assertEqual(second['dispatch']['attempt'], 2)
+
+    def test_expired_final_attempt_is_archived_failed(self):
+        registry = self.registry(); job = registry['jobs'][2]; job['max_retries'] = 0
+        registry['jobs'] = [job]
+        state, first = reserve(registry, initial_state(), '2026-09-08T09:00:00+02:00')
+        self.assertEqual(first['dispatch']['attempt'], 1)
+        state, result = reserve(registry, state, '2026-09-08T10:31:00+02:00')
+        self.assertEqual(result['status'], 'idle')
+        self.assertIn(first['dispatch']['due_at'], state['failed']['example-c.postmortem'])
 
     def test_due_jobs_are_consumed_in_stable_order(self):
         registry = self.registry(); state = initial_state()
