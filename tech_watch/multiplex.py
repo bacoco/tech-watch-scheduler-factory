@@ -12,10 +12,13 @@ JOB_RE = re.compile(r'[a-z0-9][a-z0-9_.-]{1,119}\Z')
 JOB_FIELDS = {'schema_version', 'job_id', 'repository', 'kind', 'instructions_path',
               'timezone', 'schedule', 'priority', 'max_lateness_minutes',
               'max_retries', 'enabled', 'guard', 'schedule_anchor_note'}
+REQUIRED_JOB_FIELDS = JOB_FIELDS - {'schedule_anchor_note'}
 
 
 def validate_job(job):
     require(isinstance(job, dict), 'job must be an object')
+    require(REQUIRED_JOB_FIELDS <= set(job),
+            f'missing job fields: {sorted(REQUIRED_JOB_FIELDS - set(job))}')
     require(set(job) <= JOB_FIELDS, f'unknown job fields: {sorted(set(job) - JOB_FIELDS)}')
     require(job.get('schema_version') == 1, 'job schema_version=1 required')
     require(isinstance(job.get('job_id'), str) and JOB_RE.fullmatch(job['job_id']),
@@ -39,10 +42,9 @@ def validate_job(job):
             'invalid max_lateness_minutes')
     require(type(job['max_retries']) is int and 0 <= job['max_retries'] <= 10,
             'max_retries must be 0..10')
-    require(type(job.get('enabled', True)) is bool, 'enabled must be boolean')
+    require(type(job['enabled']) is bool, 'enabled must be boolean')
     expected_guard = 'baseline-or-completed-run' if job['kind'] == 'postmortem' else 'none'
-    require(job.get('guard', expected_guard) == expected_guard,
-            f'invalid guard for {job["kind"]}')
+    require(job['guard'] == expected_guard, f'invalid guard for {job["kind"]}')
     return anchor
 
 
@@ -90,7 +92,7 @@ def due_jobs(registry, state, now):
     now_dt = instant(now) if isinstance(now, str) else now
     due = []
     for job_id, job in jobs.items():
-        if not job.get('enabled', True):
+        if not job['enabled']:
             continue
         completed = set(state.get('completed', {}).get(job_id, []))
         failed = set(state.get('failed', {}).get(job_id, []))
@@ -142,8 +144,7 @@ def resolve_dispatch(registry, dispatch):
     require(dispatch['dispatch_id'] == expected, 'dispatch identity mismatch')
     job = jobs[dispatch['job_id']]
     return {'repository': job['repository'], 'kind': job['kind'],
-            'instructions_path': job['instructions_path'], 'guard': job.get('guard', 'none'),
-            'job': job}
+            'instructions_path': job['instructions_path'], 'guard': job['guard'], 'job': job}
 
 
 def finish(registry, state, success):
