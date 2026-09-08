@@ -16,6 +16,12 @@ Les chemins relatifs refusent traversal, symlinks, doubles sens d'encodage et
 noms ambigus. Les archives et tokens ne sont jamais poussés automatiquement.
 Les pushes éventuels respectent protections et approbations existantes.
 
+L'exception explicite est la projection website décrite par `WEBSITE.md` : la
+tâche réelle peut écrire dans le dépôt PUBLIC séparé nommé par `website.json`.
+Cette autorisation ne s'étend jamais au changement de visibilité du repo source,
+à ses fichiers produit ou à ses artefacts privés. Le repo public reçoit seulement
+les fichiers statiques destinés au site.
+
 ## Confidentialité
 
 Accès GitHub via token d'environnement ou CLI locale authentifiée. Ne jamais
@@ -25,6 +31,10 @@ Collecter seulement les faits nécessaires ; ne pas aspirer les repos entiers.
 Les dossiers clients, mails, secrets et corpus juridiques sont hors périmètre.
 Un signal privé ne peut alimenter un repo public sans une abstraction autorisée.
 
+Le repo website ne reçoit jamais `scheduler-techno/`, baseline, reçus, runs,
+checkpoints, code privé, mails, pièces jointes, tokens ou données utilisateur.
+Un scan sans secret détecté n'est pas une autorisation de publication.
+
 ## Idempotence et effets incertains
 
 Identité d'une proposition : repo cible + usage + sujet/décision (hash stable).
@@ -32,6 +42,10 @@ Conserver versions de sources et registre des décisions ; consulter aussi les
 issues fermées, PR et changements livrés, pas seulement les 30 derniers titres.
 En cas d'erreur après publication potentielle : relire le marqueur avant retry.
 Ne pas promettre exactement-une-fois sans transaction distante.
+
+Pour le site, une édition identique est un no-op. Un même slug avec un contenu
+différent est bloqué plutôt qu'écrasé silencieusement. L'activation de GitHub
+Pages doit être vérifiée séparément de l'écriture des fichiers.
 
 ## Baseline
 
