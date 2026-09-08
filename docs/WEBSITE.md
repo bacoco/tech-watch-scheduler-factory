@@ -20,9 +20,10 @@ La tâche de veille doit :
 1. relire `INSTRUCTIONS.md`, `WEBSITE.md` et `website.json` au SHA épinglé ;
 2. vérifier l'existence du repo public cible ;
 3. le créer en PUBLIC s'il n'existe pas et si l'outil GitHub l'autorise ;
-4. publier le site statique à la racine de `main` ;
-5. activer GitHub Pages sur `main` + `/(root)` si cette capacité existe ;
-6. relire home, archive et édition avant d'annoncer la publication.
+4. s'assurer que la branche `main` existe ;
+5. publier le site statique à la racine de `main` ;
+6. activer GitHub Pages sur `main` + `/(root)` si cette capacité existe ;
+7. relire home, archive et édition avant d'annoncer la publication.
 
 Si l'outil GitHub peut écrire mais pas administrer Pages, la tâche conserve les
 fichiers publiés et rend l'URL directe `https://github.com/OWNER/REPO/settings/pages`
@@ -40,19 +41,25 @@ Le renderer attend un JSON contenant :
 - `excerpt` : résumé court public ;
 - `body_html` : corps HTML déjà construit par l'agent.
 
-Le HTML actif est refusé : scripts, iframes, objets, URL `javascript:` et
-attributs d'événements. Le renderer ne récupère aucune donnée et n'appelle aucun
-modèle ; il assemble uniquement une sortie publique déterministe.
+Le HTML actif est refusé : scripts, iframes, objets, formulaires, base/meta,
+URL `javascript:`, `srcdoc` et attributs d'événements. Le renderer ne récupère
+aucune donnée et n'appelle aucun modèle ; il assemble uniquement une sortie
+publique déterministe.
 
 Le helper `tools/render_public_website.py` expose la commande `website-render`
 du package. Il écrit `index.html`, `archive/index.html`, la page d'édition,
 `assets/style.css`, `.nojekyll` et `site.json`. Une édition identique est un
-no-op ; un slug existant avec un contenu différent est refusé.
+no-op. Un slug existant avec un contenu différent est refusé par défaut ; une
+correction volontaire doit utiliser `--replace-existing`.
 
 Le helper `tools/create_public_website_repo.py` est un fallback local explicite.
 Sans `--apply`, il ne fait qu'afficher le plan. Avec `--apply`, il nécessite
-`GITHUB_TOKEN`, crée ou vérifie le repo public séparé et peut tenter l'activation
-Pages avec `--enable-pages`. Le token n'est jamais écrit dans le repo.
+`GITHUB_TOKEN`, crée ou vérifie le repo public séparé et initialise `main`.
+
+Le helper `tools/publish_public_website.py` vérifie ensuite la sortie rendue et
+la publie en un seul commit Git atomique sur `main`. Il préserve les anciennes
+pages déjà présentes dans le repo public et peut activer Pages avec
+`--enable-pages`. Sans `--apply`, il ne fait qu'afficher le plan de publication.
 
 ## Structure publique
 
