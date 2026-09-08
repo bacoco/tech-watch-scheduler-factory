@@ -8,7 +8,8 @@ from .common import atomic_json, read_json, repository, require
 SITE_TEMPLATES = Path(__file__).resolve().parent.parent / 'templates' / 'site'
 SLUG_RE = re.compile(r'[a-z0-9][a-z0-9-]{1,119}\Z')
 DATE_RE = re.compile(r'20\d\d-\d\d-\d\d\Z')
-ACTIVE_HTML = re.compile(r'<\s*(script|iframe|object|embed)\b|javascript:|\son[a-z]+\s*=', re.I)
+ACTIVE_HTML = re.compile(
+    r'<\s*(script|iframe|object|embed|form|base|meta)\b|javascript:|srcdoc\s*=|\son[a-z]+\s*=', re.I)
 
 
 def website_repository(source_repository):
@@ -25,7 +26,8 @@ def validate_edition(value):
     require(isinstance(value['date'], str) and DATE_RE.fullmatch(value['date']), 'invalid date')
     for key in ('title', 'excerpt', 'body_html'):
         require(isinstance(value[key], str) and value[key].strip(), f'invalid {key}')
-    require(len(value['title']) <= 240 and len(value['excerpt']) <= 1200, 'edition metadata too long')
+    require(len(value['title']) <= 240 and len(value['excerpt']) <= 1200,
+            'edition metadata too long')
     require(len(value['body_html'].encode('utf-8')) <= 750_000, 'edition body too large')
     require(not ACTIVE_HTML.search(value['body_html']), 'active HTML is forbidden')
     return {key: value[key].strip() for key in required}
@@ -77,7 +79,7 @@ def _archive(source_repository, editions):
     return _shell(f'{source_repository} — archive', body, depth=1)
 
 
-def render_public_site(source_repository, edition, output):
+def render_public_site(source_repository, edition, output, replace_existing=False):
     source = repository(source_repository)
     item = validate_edition(edition)
     root = Path(output)
@@ -92,15 +94,18 @@ def render_public_site(source_repository, edition, output):
     page = _edition_page(source, item)
     edition_path = root / item['slug'] / 'index.html'
     if edition_path.exists():
-        require(edition_path.read_text(encoding='utf-8') == page,
-                'edition exists with different public content')
+        same = edition_path.read_text(encoding='utf-8') == page
+        require(same or replace_existing,
+                'edition exists with different public content; explicit replacement required')
+        if not same:
+            edition_path.write_text(page, encoding='utf-8')
     else:
         edition_path.parent.mkdir(parents=True, exist_ok=True)
         edition_path.write_text(page, encoding='utf-8')
     existing = {e['slug']: e for e in manifest['editions']}
     meta = {k: item[k] for k in ('slug', 'date', 'title', 'excerpt')}
-    require(item['slug'] not in existing or existing[item['slug']] == meta,
-            'edition metadata changed')
+    if item['slug'] in existing and existing[item['slug']] != meta:
+        require(replace_existing, 'edition metadata changed; explicit replacement required')
     existing[item['slug']] = meta
     editions = sorted(existing.values(), key=lambda e: (e['date'], e['slug']), reverse=True)
     manifest['editions'] = editions
@@ -113,4 +118,5 @@ def render_public_site(source_repository, edition, output):
     (root / '.nojekyll').write_text('', encoding='utf-8')
     atomic_json(manifest_path, manifest)
     return {'source_repository': source, 'public_repository': manifest['public_repository'],
-            'edition': item['slug'], 'edition_count': len(editions), 'root': str(root)}
+            'edition': item['slug'], 'edition_count': len(editions), 'root': str(root),
+            'replaced': bool(replace_existing)}
