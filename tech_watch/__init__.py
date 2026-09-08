@@ -1,2 +1,2 @@
-"""Repository-specific research instruction and public-site factory."""
-__version__ = "0.3.1"
+"""Repository-specific research, adaptive runtime and public-site factory."""
+__version__ = "0.4.0"
