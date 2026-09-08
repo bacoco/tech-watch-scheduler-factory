@@ -14,7 +14,8 @@
       "priority": 60,
       "max_lateness_minutes": 10080,
       "max_retries": 2,
-      "enabled": true
+      "enabled": true,
+      "guard": "none"
     },
     {
       "schema_version": 1,
@@ -27,7 +28,8 @@
       "priority": 50,
       "max_lateness_minutes": 10080,
       "max_retries": 2,
-      "enabled": true
+      "enabled": true,
+      "guard": "none"
     },
     {
       "schema_version": 1,
@@ -40,7 +42,8 @@
       "priority": 20,
       "max_lateness_minutes": 43200,
       "max_retries": 1,
-      "enabled": true
+      "enabled": true,
+      "guard": "baseline-or-completed-run"
     }
   ]
 }
