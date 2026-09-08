@@ -1,4 +1,4 @@
-"""Validate the checkout without dependencies or network."""
+"""Validate the factory checkout without treating generated watch state as package files."""
 from pathlib import Path
 import ast
 import json
@@ -6,7 +6,9 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP = {'.git', '__pycache__', 'work', 'dist', '.venv'}
+# scheduler-techno/ is generated runtime state when the factory watches itself.
+# It must not enter the factory publication manifest or make the package inventory fail.
+SKIP = {'.git', '__pycache__', 'work', 'dist', '.venv', 'scheduler-techno'}
 
 
 def files():
@@ -47,7 +49,7 @@ def main():
         if not (ROOT / directory / 'README.md').exists(): errors.append('missing index: ' + directory)
     if errors:
         print('\n'.join(errors), file=sys.stderr); return 2
-    print(f'PASS: {len(paths)} files; Python syntax, JSON, local links, <=200 lines, inventory.')
+    print(f'PASS: {len(paths)} factory files; generated scheduler-techno excluded; syntax, JSON, links, <=200 lines, inventory.')
     return 0
 
 
