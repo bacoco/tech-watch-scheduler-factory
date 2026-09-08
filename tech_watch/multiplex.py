@@ -3,6 +3,7 @@ from copy import deepcopy
 from datetime import timedelta
 from hashlib import sha256
 import re
+from zoneinfo import ZoneInfo
 
 from .common import instant, relative, repository, require
 from .fields import text
@@ -26,6 +27,7 @@ def validate_job(job):
     interval = schedule['interval_days']
     require(type(interval) is int and 1 <= interval <= 365, 'invalid interval_days')
     text(job['timezone'], 'job timezone')
+    ZoneInfo(job['timezone'])
     require(type(job['priority']) is int and 0 <= job['priority'] <= 100,
             'priority must be 0..100')
     require(type(job['max_lateness_minutes']) is int and job['max_lateness_minutes'] >= 0,
