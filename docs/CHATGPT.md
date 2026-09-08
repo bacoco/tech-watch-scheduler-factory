@@ -1,53 +1,60 @@
-# Deux demandes dans ChatGPT, puis deux tâches distinctes
+# Deux demandes courtes dans ChatGPT, prompts canoniques dans le repo
+
+Le [README](../README.md) ne contient volontairement que deux mini-prompts. Toute la logique détaillée est versionnée dans :
+
+- [`prompts/PREPARE.md`](../prompts/PREPARE.md) pour préparer le repo cible ;
+- [`prompts/ACTIVATE.md`](../prompts/ACTIVATE.md) pour activer la veille et le website.
+
+L'utilisateur fournit uniquement `TARGET_REPOSITORY` via le lien du repo sur lequel il travaille. Cela évite de recopier de longs prompts et garantit que les futures corrections de la factory sont lues depuis GitHub.
 
 ## Premier prompt : préparer le repo cible
 
-Le [README](../README.md) contient les deux demandes en langage naturel.
-L'utilisateur ouvre un chat ChatGPT et remplace le lien du repo cible.
-ChatGPT lit la fabrique, comprend les usages, recherche réellement sur Internet,
-puis publie le dossier scheduler-techno selon les autorisations du dépôt.
-Cette première demande ne lance pas le T0 et ne crée aucune tâche.
-Le parcours ne requiert ni terminal utilisateur ni passage dans Codex ou Claude.
+ChatGPT applique `prompts/PREPARE.md`, comprend les usages, recherche réellement sur Internet, puis publie `scheduler-techno/` selon les autorisations du dépôt. Cette première demande ne lance pas T0 et ne crée aucune Scheduled Task ni repo website.
 
-## Deuxième prompt : activer deux tâches
+Le profil propose séparément `cadence.watch` et `cadence.postmortem`, puis choisit explicitement `runtime.mode=dedicated|multiplexed` avec justification.
 
-Toujours dans ChatGPT, demander deux tâches distinctes pour le même repo :
-la veille le lundi matin et le post-mortem le vendredi matin, Europe/Paris,
-ou aux créneaux expressément choisis par l'utilisateur.
+## Deuxième prompt : activer ce runtime
 
-Le pack fournit CHATGPT-TASK.md comme entrée vers les instructions de veille.
-La tâche de veille réalise ou reprend le T0, puis passe aux mises à jour.
-Le post-mortem lit POST-MORTEM.md et les résultats observés pour améliorer les
-instructions dans le cadre autorisé. Ne pas fusionner ce second travail dans
-la tâche de veille. La fabrique ne crée aucun objet planifié à la génération.
+ChatGPT applique `prompts/ACTIVATE.md` au même repo cible et relit `runtime.json` au lieu de supposer deux tâches identiques.
 
-Chaque tâche conserve le repo cible, sa branche réelle et son point d'entrée.
-Elle relit les instructions à chaque passage et épingle un SHA pour le cycle ;
-elle ne dépend pas d'une copie figée du chat ni de sa mémoire implicite.
-Réutiliser les tâches équivalentes existantes au lieu de créer des doublons.
+### dedicated
+
+Créer ou réutiliser deux tâches distinctes :
+
+- `Veille — repo`, avec la cadence `watch` ;
+- `Post-mortem — repo`, avec la cadence `postmortem`.
+
+La veille réalise/reprend T0 puis UPDATE. Le post-mortem lit `POST-MORTEM.md`, mesure la qualité des runs et réévalue les deux cadences séparément. Une recommandation de fréquence ne modifie pas automatiquement la vraie tâche.
+
+### multiplexed
+
+Ne créer aucune tâche propre au repo. Le profil fournit `group_id` et `registry_repository`. Enregistrer les jobs de `multiplex-jobs.json` dans le registre canonique puis créer/réutiliser seulement :
+
+- `Tech Watch Orchestrator — group_id` ;
+- `Tech Watch Worker — group_id`.
+
+Les textes restaurables sont dans `MULTIPLEX-TASKS.md`. L'Orchestrator réserve un job sans exécuter le métier. Le Worker résout le `job_id` dans le registre Git et refuse tout chemin/prompt ajouté dans la queue.
+
+## Website
+
+Dans les deux modes, après chaque T0/UPDATE validé, `prompts/ACTIVATE.md` impose de créer ou réutiliser le repo public `*-website`, générer ou mettre à jour la home, l'archive et l'édition, pousser sur `main`, puis maintenir le site à chaque cycle suivant. GitHub Pages est activé lorsque la capacité existe.
+
+## Migration
+
+Avant `dedicated → multiplexed`, désactiver réellement les anciennes tâches, relire leur état et conserver la preuve. Seulement ensuite le registre peut porter `dedicated_tasks_disabled=true`. La migration inverse suit le même principe. Ne jamais laisser les deux modes exécuter la même veille en parallèle.
+
+## Cadence
+
+Une tâche est créée selon la recommandation du profil, pas un lundi/vendredi universel. Le post-mortem peut proposer `keep`, `increase` ou `decrease` après une fenêtre suffisante, avec preuves et rollback. Une modification réelle du calendrier nécessite l'outil de planification et les permissions correspondantes.
 
 ## Accès et création vérifiés
 
-Vérifier dans l'environnement réel de chaque tâche la lecture du repo, la
-recherche externe, l'écriture des résultats et les droits sur les issues.
-Les outils et autorisations du chat ne prouvent pas ceux de la tâche future.
-Respecter les approbations requises : elles peuvent mettre une tâche en pause.
-Nommer ce blocage ; ne jamais contourner l'autorisation ni promettre l'autonomie.
+Vérifier dans l'environnement réel : lecture GitHub, recherche externe, écriture, issues, création de repo runtime si nécessaire, repo website et Pages. Les outils et autorisations du chat ne prouvent pas ceux de la tâche future. Respecter les approbations requises et nommer tout blocage.
 
-Confirmer pour chaque tâche son identifiant, son nom, son calendrier, son fuseau
-et son état réellement retournés par l'outil. Distinguer tâche créée, activée et
-première exécution réussie. Sans outil disponible, aucune création n'est acquise.
-Un simple rappel, un prompt ou un fichier ne remplace pas une tâche exécutante.
+Confirmer pour chaque tâche physique son identifiant, nom, calendrier, fuseau et état retournés par l'outil. Distinguer tâche créée, activée et premier passage réussi. Un prompt ou fichier ne remplace pas une tâche exécutante.
 
-## Gratuité et capacité du compte
+## Capacité du compte
 
-Le parcours utilise ChatGPT sans serveur ni clé d'API externe à configurer.
-L'[aide officielle](https://help.openai.com/en/articles/10291617-tasks-in-chatgpt)
-mentionne les comptes gratuits éligibles, sous réserve des fonctionnalités,
-quotas et permissions disponibles. Cela ne garantit pas que tous les comptes
-possèdent les accès GitHub nécessaires ou les mêmes possibilités d'écriture.
+En `dedicated`, une veille consomme deux places de tâches. En `multiplexed`, un groupe de N veilles logiques vise deux places physiques, sans contourner aucune limite produit : les jobs s'exécutent séquentiellement via le slot unique. Vérifier les places effectivement disponibles avant activation.
 
-Deux tâches par repo nécessitent deux places. Vérifier la capacité effective
-avant création, sans supprimer les autres tâches pour libérer des places.
-Le créneau « matin » ne suppose pas une heure exacte réservée à certains plans.
-Aucun nombre fixe de tâches ni aucune gratuité illimitée n'est promis ici.
+L'[aide officielle](https://help.openai.com/en/articles/10291617-tasks-in-chatgpt) mentionne les comptes gratuits éligibles sous réserve des fonctionnalités, quotas et permissions disponibles. Aucune gratuité illimitée n'est promise.

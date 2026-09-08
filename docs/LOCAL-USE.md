@@ -14,10 +14,25 @@ python tools/check_repository.py
 python -m tech_watch generate --profile examples/image-product.json --out work
 python -m tech_watch validate work/example--image-product/scheduler-techno
 python -m tech_watch generate --profile examples/domain-watch.json --out work/domain
+python -m tech_watch multiplex-validate examples/multiplex-registry.json
 ```
 
-Les profils d'exemple et journaux sont synthétiques. Ces commandes testent la
-fabrique ; elles ne font pas une recherche Internet et n'activent aucune tâche.
+Les profils, cadences et registres d'exemple sont synthétiques. Ces commandes
+testent la fabrique ; elles ne font pas une recherche Internet et n'activent
+aucune Scheduled Task.
+
+## Simuler le multiplexage
+
+La réservation et la fin d'un dispatch peuvent être simulées sans effet distant :
+
+```bash
+python -m tech_watch multiplex-reserve examples/multiplex-registry.json --now 2026-09-08T09:00:00+02:00
+python -m tech_watch multiplex-reserve examples/multiplex-registry.json --state work/runtime-state.json --now 2026-09-08T09:00:00+02:00
+python -m tech_watch multiplex-finish examples/multiplex-registry.json work/runtime-state.json --success
+```
+
+Ces commandes rendent le nouvel état en sortie ; elles n'écrivent pas la queue
+GitHub. Le runtime réel suit [RUNTIME](RUNTIME.md) et ses contrôles d'autorité.
 
 ## Collecter, puis faire travailler l'agent
 

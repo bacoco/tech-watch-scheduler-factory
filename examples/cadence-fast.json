@@ -1,0 +1,22 @@
+{
+  "timezone": "Europe/Paris",
+  "watch": {
+    "recommendation": "daily",
+    "reason": "high-volatility security and provider changes can become stale within days",
+    "interval_days": 1,
+    "min_interval_days": 1,
+    "max_interval_days": 7
+  },
+  "postmortem": {
+    "recommendation": "every two weeks after enough runs",
+    "reason": "aggregate several daily observations before changing sources or cadence",
+    "interval_days": 14,
+    "min_interval_days": 7,
+    "max_interval_days": 30
+  },
+  "adaptation": {
+    "min_runs_before_change": 3,
+    "decrease_after_consecutive_low_value": 5
+  },
+  "max_new_issues": 3
+}

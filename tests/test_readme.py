@@ -1,4 +1,4 @@
-"""Protect the two-copy-paste ChatGPT-only public entry point."""
+"""Protect the short two-copy-paste ChatGPT entry point and canonical prompts."""
 import re
 import unittest
 from pathlib import Path
@@ -10,78 +10,76 @@ class ReadmeTests(unittest.TestCase):
     def setUp(self):
         self.text = (ROOT / 'README.md').read_text(encoding='utf-8')
         self.prompts = re.findall(r'^> (.+)$', self.text, re.MULTILINE)
+        self.prepare = (ROOT / 'prompts/PREPARE.md').read_text(encoding='utf-8')
+        self.activate = (ROOT / 'prompts/ACTIVATE.md').read_text(encoding='utf-8')
 
     def test_no_code_blocks_or_shell_commands(self):
         self.assertNotIn('```', self.text)
         self.assertIsNone(re.search(
-            r'(?im)^\s*(?:python\d*\s|pip\s|git clone\s|gh\s|cd\s|\$\s)',
-            self.text))
+            r'(?im)^\s*(?:python\d*\s|pip\s|git clone\s|gh\s|cd\s|\$\s)', self.text))
         self.assertNotIn('python', self.text.lower())
 
-    def test_exactly_two_copyable_requests_for_an_explicit_repo(self):
+    def test_exactly_two_short_copyable_requests(self):
         self.assertEqual(len(self.prompts), 2)
         for prompt in self.prompts:
             self.assertIn('[LIEN_DU_REPO]', prompt)
             self.assertIn('ChatGPT', prompt)
-        self.assertNotIn('dix dépôts', self.text)
+            self.assertIn('TARGET_REPOSITORY', prompt)
+            self.assertLess(len(prompt), 450)
+        self.assertIn('/prompts/PREPARE.md', self.prompts[0])
+        self.assertIn('/prompts/ACTIVATE.md', self.prompts[1])
 
-    def test_first_request_fetches_factory_and_installs_only(self):
-        prompt = self.prompts[0]
-        self.assertIn(
-            'https://github.com/bacoco/tech-watch-scheduler-factory/blob/main/'
-            'skills/generate-tech-watch/SKILL.md', prompt)
-        self.assertTrue((ROOT / 'skills/generate-tech-watch/SKILL.md').is_file())
-        for required in ('recherche externe approfondie', 'scheduler-techno',
-                         'ne lance pas encore le T0',
-                         'ne crée aucune tâche planifiée'):
-            self.assertIn(required, prompt)
+    def test_prepare_prompt_carries_full_generation_contract(self):
+        for required in ('skills/generate-tech-watch/SKILL.md',
+                         'recherche externe approfondie', 'scheduler-techno/',
+                         'cadence.watch', 'cadence.postmortem', 'dedicated',
+                         'multiplexed', 'registry_repository', 'RUNTIME.md',
+                         'multiplex-jobs.json', 'WEBSITE.md', 'website.json',
+                         'ne lance pas le T0'):
+            self.assertIn(required, self.prepare)
 
-    def test_second_request_creates_two_separate_weekly_tasks(self):
-        prompt = self.prompts[1]
-        for required in ('deux tâches planifiées distinctes', 'Veille —',
-                         'Post-mortem —', 'lundi matin', 'vendredi matin',
-                         'Europe/Paris', 'identifiant', 'état vérifiés',
-                         'pas seulement leurs textes', 'simples rappels',
-                         'réutilise-la', 'ne devront pas travailler à partir '
-                         "d'une copie figée"):
-            self.assertIn(required, prompt)
+    def test_activate_prompt_carries_runtime_and_website_contract(self):
+        for required in ('runtime.mode', 'Veille —', 'Post-mortem —',
+                         'Tech Watch Orchestrator', 'Tech Watch Worker',
+                         'dedicated_tasks_disabled=true', 'dispatch_id',
+                         'retry borné', 'registre canonique', 'RECHERCHE.md',
+                         'repo PUBLIC séparé `*-website`', 'GitHub Pages',
+                         'home + archive', 'watch_status', 'website_status'):
+            self.assertIn(required, self.activate)
 
-    def test_public_website_is_part_of_the_two_step_journey(self):
-        first, second = self.prompts
-        for required in ('WEBSITE.md', 'website.json', 'nom-du-repo-website',
-                         'ne crée pas encore ce repo public'):
-            self.assertIn(required, first)
-        for required in ('créer réellement en PUBLIC', 'GitHub Pages',
-                         'main et /(root)', 'ne doit jamais rendre public le repo source',
-                         'statut de veille du statut du website'):
-            self.assertIn(required, second)
-        for path in ('docs/WEBSITE.md', 'templates/watch/WEBSITE.md',
+    def test_readme_explicitly_says_website_is_generated_and_updated(self):
+        for required in ('site public généré puis mis à jour automatiquement',
+                         'génère le site puis le met à jour',
+                         'À chaque exécution suivante validée',
+                         'reconstruire la home + l\'archive'):
+            self.assertIn(required, self.text)
+
+    def test_canonical_prompt_files_exist(self):
+        for path in ('prompts/README.md', 'prompts/PREPARE.md', 'prompts/ACTIVATE.md',
+                     'docs/WEBSITE.md', 'templates/watch/WEBSITE.md',
                      'tools/render_public_website.py', 'tools/create_public_website_repo.py',
                      'tools/publish_public_website.py'):
             self.assertTrue((ROOT / path).is_file(), path)
-        self.assertIn('tools/publish_public_website.py', self.text)
 
-    def test_scheduled_lifecycle_and_access_remain_explicit(self):
-        prompt = self.prompts[1]
-        for required in ('T0 gelé', 'mises à jour', 'reliront les instructions',
-                         'approbations requises', 'outil de planification',
-                         "sans annoncer de création ou d'autonomie fictive"):
-            self.assertIn(required, prompt)
-        for required in ('accès', 'ne crée pas une tâche planifiée',
-                         'jamais prétendre', 'synthétiques'):
-            self.assertIn(required, self.text)
+    def test_runtime_and_cadence_examples_exist(self):
+        for path in ('examples/cadence-fast.json', 'examples/cadence-slow.json',
+                     'examples/multiplex-registry.json', 'docs/RUNTIME.md',
+                     'templates/watch/RUNTIME.md'):
+            self.assertTrue((ROOT / path).is_file(), path)
 
-    def test_free_access_is_conditional_and_sourced(self):
+    def test_access_and_proof_language_remains_explicit(self):
         for required in ('comptes gratuits éligibles', 'avec des limites',
-                         'https://help.openai.com/en/articles/10291617-',
-                         'Ce n\'est pas une promesse de gratuité illimitée'):
+                         'permissions', 'ne prouvent pas', 'synthétiques'):
             self.assertIn(required, self.text)
+        self.assertIn('https://help.openai.com/en/articles/10291617-', self.text)
 
-    def test_detailed_task_guide_matches_two_task_journey(self):
+    def test_detailed_task_guide_is_runtime_aware(self):
         text = (ROOT / 'docs/CHATGPT.md').read_text(encoding='utf-8')
-        self.assertIn('deux tâches distinctes', text)
+        self.assertIn('dedicated', text)
+        self.assertIn('multiplexed', text)
+        self.assertIn('Orchestrator', text)
+        self.assertIn('Worker', text)
         self.assertIn('POST-MORTEM.md', text)
-        self.assertNotIn('branche du même cycle', text)
 
 
 if __name__ == '__main__':

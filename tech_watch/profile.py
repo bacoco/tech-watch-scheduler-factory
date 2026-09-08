@@ -1,17 +1,18 @@
 """Structural contract; semantic truth remains the agent's responsibility."""
-from zoneinfo import ZoneInfo
 import re
 from .fields import text, texts
 from .usage import validate_usage
 from .discovery import validate_discovery
 from .common import SHA_RE, instant, relative, repository, require
+from .scheduling import cadence_model, runtime_model
 
 CHANNELS = {'arxiv', 'github', 'official', 'models', 'products', 'community', 'personal', 'web_open'}
 
 
 def validate_profile(p):
     require(isinstance(p, dict), "profile must be an object")
-    require(p.get('schema_version') == 2, "profile v2 required: reanalyse usage and external discovery; do not relabel v1")
+    require(p.get('schema_version') == 2,
+            "profile v2 required: reanalyse usage and external discovery; do not relabel v1")
     repository(p['repository'])
     text(p['default_branch'], 'default_branch')
     require(bool(SHA_RE.fullmatch(p['analyzed_sha'])), 'invalid analyzed SHA')
@@ -47,11 +48,14 @@ def validate_profile(p):
         texts(q['evidence_ids'], 'evidence_ids', True)
         require(set(q['evidence_ids']) <= evidence_ids, 'unknown evidence reference')
     require(isinstance(p['channels'], list), 'channels must be a list')
-    require(CHANNELS <= {c['id'] for c in p['channels']}, 'decide core source families including open web')
+    require(CHANNELS <= {c['id'] for c in p['channels']},
+            'decide core source families including open web')
     require(len(p['channels']) <= 20, 'too many families; split scope')
     seen = set()
     for c in p['channels']:
-        require(isinstance(c['id'], str) and re.fullmatch(r'[a-z][a-z0-9_-]{0,49}', c['id']) and c['id'] not in seen, 'invalid/duplicate channel')
+        require(isinstance(c['id'], str)
+                and re.fullmatch(r'[a-z][a-z0-9_-]{0,49}', c['id'])
+                and c['id'] not in seen, 'invalid/duplicate channel')
         seen.add(c['id'])
         require(c['mode'] in {'primary', 'secondary', 'excluded'}, 'invalid source mode')
         require(c['access'] in {'unknown', 'verified', 'blocked'}, 'invalid access state')
@@ -60,19 +64,17 @@ def validate_profile(p):
         texts(c['queries'], 'queries', active)
         texts(c['targets'], 'targets', active)
     require(any(c['mode'] != 'excluded' for c in p['channels']), 'no active source')
-    i = p['integration']
-    require(i['mode'] in {'none', 'coexist', 'reuse-existing'}, 'invalid integration')
-    text(i['reason'], 'integration reason')
-    texts(i['paths'], 'integration paths', i['mode'] != 'none')
-    for path in i['paths']:
+    integration = p['integration']
+    require(integration['mode'] in {'none', 'coexist', 'reuse-existing'},
+            'invalid integration')
+    text(integration['reason'], 'integration reason')
+    texts(integration['paths'], 'integration paths', integration['mode'] != 'none')
+    for path in integration['paths']:
         relative(path)
-    require(i['mode'] != 'none' or not i['paths'], 'none cannot have existing paths')
-    cadence = p['cadence']
-    ZoneInfo(cadence['timezone'])
-    for key in ('recommendation', 'reason'):
-        text(cadence[key], key)
-    require(type(cadence['max_new_issues']) is int
-            and 0 <= cadence['max_new_issues'] <= 10, 'issue ceiling must be 0..10')
+    require(integration['mode'] != 'none' or not integration['paths'],
+            'none cannot have existing paths')
+    cadence_model(p['cadence'])
+    runtime_model(p)
     usage_ids = validate_usage(p, evidence_ids)
     require(isinstance(p.get('discovery'), dict), 'external discovery record required')
     validate_discovery(p['discovery'], usage_ids, 'generation', p['analyzed_sha'],
