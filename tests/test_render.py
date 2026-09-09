@@ -33,8 +33,14 @@ class Rendering(unittest.TestCase):
         self.assertEqual(runtime['mode'], 'dedicated')
         self.assertEqual(runtime['cadence']['watch']['interval_days'], 7)
         self.assertEqual(runtime['cadence']['postmortem']['interval_days'], 30)
+        self.assertTrue(runtime['recovery']['enabled'])
+        self.assertEqual(runtime['recovery']['interval_hours'], 6)
+        self.assertTrue(runtime['recovery']['only_when_incomplete'])
         text = (root / 'CHATGPT-TASK.md').read_text()
-        self.assertIn('## Veille', text); self.assertIn('## Post-mortem', text)
+        self.assertIn('## Veille', text)
+        self.assertIn('## Reprise', text)
+        self.assertIn('## Post-mortem', text)
+        self.assertIn('toutes les 6 heures', text)
         self.assertEqual(read_json(root / 'multiplex-jobs.json')['jobs'], [])
 
     def test_multiplex_profile_generates_two_logical_jobs_and_restore_prompts(self):
@@ -47,6 +53,7 @@ class Rendering(unittest.TestCase):
         runtime = read_json(root / 'runtime.json')
         jobs = read_json(root / 'multiplex-jobs.json')['jobs']
         self.assertEqual(runtime['mode'], 'multiplexed')
+        self.assertNotIn('recovery', runtime)
         self.assertEqual(len(jobs), 2)
         self.assertEqual({j['kind'] for j in jobs}, {'watch', 'postmortem'})
         self.assertIn('Orchestrator', (root / 'MULTIPLEX-TASKS.md').read_text())
