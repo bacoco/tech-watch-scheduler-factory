@@ -40,6 +40,14 @@ def runtime_files(profile, target_url, website_repo):
     runtime_json = {'schema_version': 1, **runtime,
         'cadence': {k: cadence[k] for k in ('timezone', 'watch', 'postmortem', 'adaptation')},
         'external_tasks': {'status': 'not_created'}}
+    if runtime['mode'] == 'dedicated':
+        runtime_json['recovery'] = {
+            'enabled': True,
+            'interval_hours': 6,
+            'only_when_incomplete': True,
+            'same_occurrence_only': True,
+            'concurrency_requires_positive_live_writer_evidence': True,
+        }
     if runtime['mode'] == 'multiplexed':
         runtime_json['migration'] = {'dedicated_tasks_disabled': False,
                                      'status': 'requires_verified_shutdown'}
@@ -59,7 +67,8 @@ def _dedicated_task(profile, target_url, website_repo, cadence):
     watch, post = cadence['watch'], cadence['postmortem']
     return f"""# Activation manuelle — runtime dédié
 
-Aucune tâche n'a été créée par la fabrique. Créer deux tâches distinctes.
+Aucune tâche n'a été créée par la fabrique. Créer trois tâches distinctes :
+lancement de veille, reprise de veille et post-mortem.
 
 ## Veille
 Crée une tâche « Veille — {profile['repository']} » selon : {watch['recommendation']}
@@ -67,6 +76,14 @@ Crée une tâche « Veille — {profile['repository']} » selon : {watch['recomm
 À chaque exécution, lis {target_url}, épingle un SHA, lis `USAGES.md` et applique
 explicitement `RECHERCHE.md`, puis le cycle T0/UPDATE indiqué par INSTRUCTIONS.md.
 Après un run validé, applique WEBSITE.md vers `{website_repo}` si les droits existent.
+
+## Reprise
+Crée ou réutilise « Reprise — {profile['repository']} » toutes les 6 heures.
+Cette tâche relit le repo et n'agit que si l'occurrence de veille la plus récente
+est non terminale et récupérable. Elle reprend exactement cette occurrence depuis
+ses reçus/checkpoints ; elle ne démarre jamais un nouveau cycle hors cadence.
+Une réservation ancienne n'est pas une preuve de concurrence : exiger une preuve
+positive d'un writer/lease encore actif. Si rien n'est à reprendre, ne rien faire.
 
 ## Post-mortem
 Crée une tâche « Post-mortem — {profile['repository']} » selon : {post['recommendation']}
