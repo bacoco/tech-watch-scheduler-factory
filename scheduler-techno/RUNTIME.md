@@ -4,7 +4,11 @@ Lire `runtime.json` avant toute activation. La présence de ce fichier ne crée 
 
 ## Mode dedicated
 
-Deux tâches physiques sont propres à cette veille : une tâche de veille et une tâche de post-mortem. Leurs cadences sont distinctes dans `profile.json` et `runtime.json`. Ne jamais recopier une cadence unique sur les deux par défaut.
+Trois tâches physiques sont propres à cette veille : une tâche de veille, une tâche de reprise et une tâche de post-mortem. Les cadences métier de veille et de post-mortem restent distinctes dans `profile.json` et `runtime.json`.
+
+La tâche de reprise est technique : elle tourne toutes les 6 heures et n'agit que si la dernière occurrence de veille est non terminale et récupérable. Elle reprend exactement la même occurrence depuis ses reçus/checkpoints. Elle ne crée jamais une nouvelle occurrence hors cadence et ne traite jamais la simple présence d'une réservation ancienne comme une preuve de concurrence.
+
+Si aucune occurrence n'est à reprendre, la tâche de reprise ne fait rien. `CONCURRENT_RUN_ACTIVE` exige une preuve positive d'un writer/lease encore actif.
 
 ## Mode multiplexed
 
@@ -18,7 +22,7 @@ Le `dispatch_id` dépend seulement de `job_id` et `due_at`. Deux jobs dus ensemb
 
 ## Migration dedicated → multiplexed
 
-Ne jamais faire tourner les deux modes en parallèle. Avant d'activer le registre, identifier les Scheduled Tasks dédiées existantes, les désactiver réellement, vérifier leur état, conserver la preuve, puis seulement passer `dedicated_tasks_disabled=true`.
+Ne jamais faire tourner les deux modes en parallèle. Avant d'activer le registre, identifier les Scheduled Tasks dédiées existantes, y compris la tâche de reprise, les désactiver réellement, vérifier leur état, conserver la preuve, puis seulement passer `dedicated_tasks_disabled=true`.
 
 ## Post-mortem
 
