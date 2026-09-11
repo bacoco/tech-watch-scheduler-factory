@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "stage": "update",
+  "repo_sha": "111e52313ae2ea070685a3b6bf4761bb0ca07353",
+  "status": "complete",
+  "synthetic": false,
+  "started_at": "2026-09-11T10:21:21+02:00",
+  "finished_at": "PENDING",
+  "scope": "Manual owner-requested UPDATE covering ChatGPT Scheduled Tasks, GitHub Apps/Pages, reliable recovery/idempotency and installation/delivery friction.",
+  "stop_reason": "All four questions were refreshed through initial, expansion and challenge research; findings converged on retain/no-material-change, with no blocking access gap for the watch itself.",
+  "blocking_gaps": [],
+  "searches": [
+    {
+      "id": "r1",
+      "phase": "initial",
+      "query": "OpenAI Scheduled Tasks event-triggered tasks GitHub Gmail Slack September 2026",
+      "reason": "Refresh q1 against current product documentation.",
+      "trace": "web search; OpenAI Help Scheduled Tasks + Work docs",
+      "executed_at": "2026-09-11T10:22:00+02:00",
+      "outcome": "results",
+      "source_ids": ["s1", "s2"]
+    },
+    {
+      "id": "r2",
+      "phase": "initial",
+      "query": "GitHub Pages publishing source GitHub App permissions September 2026",
+      "reason": "Refresh q2 and delivery constraints.",
+      "trace": "web search; GitHub Docs Pages + GitHub App permissions",
+      "executed_at": "2026-09-11T10:22:00+02:00",
+      "outcome": "results",
+      "source_ids": ["s3", "s4"]
+    },
+    {
+      "id": "r3",
+      "phase": "expansion",
+      "query": "long-running agent crash recovery checkpoint fence non-idempotent side effects",
+      "reason": "Expand q3 beyond the seed source list.",
+      "trace": "web search; Microsoft Foundry crash recovery preview",
+      "executed_at": "2026-09-11T10:23:00+02:00",
+      "outcome": "results",
+      "source_ids": ["s5"]
+    },
+    {
+      "id": "r4",
+      "phase": "challenge",
+      "query": "retry idempotency worker crash duplicate side effects durable execution",
+      "reason": "Challenge current recovery assumptions and look for failure modes.",
+      "trace": "web search; AWS Durable Execution, AWS Agentic AI Lens, Temporal",
+      "executed_at": "2026-09-11T10:23:00+02:00",
+      "outcome": "results",
+      "source_ids": ["s6", "s7", "s8"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://help.openai.com/en/articles/10291617",
+      "publisher": "OpenAI",
+      "family": "official",
+      "locator": "Scheduled tasks in ChatGPT",
+      "finding": "Event-triggered tasks run in Work for supported Gmail, Slack and GitHub pull-request activity; connected-app permissions and approvals still apply.",
+      "limitations": "Supported event surface is narrower than this watch and availability depends on plan/workspace.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": ["u1", "u2"],
+      "accessed_at": "2026-09-11T10:22:00+02:00"
+    },
+    {
+      "id": "s2",
+      "url": "https://help.openai.com/en/articles/20001275/",
+      "publisher": "OpenAI",
+      "family": "official",
+      "locator": "ChatGPT Work and Codex",
+      "finding": "Work supports webhook-triggered tasks for approved connected apps; GitHub support is pull-request activity in authorized repositories.",
+      "limitations": "Does not replace periodic open-web research or cover every repository event.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": ["u1", "u2"],
+      "accessed_at": "2026-09-11T10:22:00+02:00"
+    },
+    {
+      "id": "s3",
+      "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site",
+      "publisher": "GitHub",
+      "family": "official",
+      "locator": "Configuring a publishing source for GitHub Pages",
+      "finding": "Pages can publish from a branch; configuring the publishing source requires appropriate repository permissions.",
+      "limitations": "Documentation does not prove the current connector exposes Pages configuration actions.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": ["u1", "u2"],
+      "accessed_at": "2026-09-11T10:22:00+02:00"
+    },
+    {
+      "id": "s4",
+      "url": "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/choosing-permissions-for-a-github-app",
+      "publisher": "GitHub",
+      "family": "official",
+      "locator": "Choosing permissions for a GitHub App",
+      "finding": "GitHub App API and webhook behavior is governed by explicit permissions; least privilege remains the recommended model.",
+      "limitations": "Repository selection and endpoint exposure in ChatGPT remain separate runtime facts.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": ["u1", "u2"],
+      "accessed_at": "2026-09-11T10:22:00+02:00"
+    },
+    {
+      "id": "s5",
+      "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/recover-long-running-work",
+      "publisher": "Microsoft",
+      "family": "practice",
+      "locator": "Recover long-running work after a crash (preview)",
+      "finding": "Long-running agent recovery should resume from durable checkpoints and fence non-idempotent side effects.",
+      "limitations": "Preview feature and not the ChatGPT Scheduled Tasks runtime.",
+      "status": "read",
+      "origin": "discovered",
+      "usage_ids": ["u1", "u3"],
+      "accessed_at": "2026-09-11T10:23:00+02:00"
+    },
+    {
+      "id": "s6",
+      "url": "https://docs.aws.amazon.com/durable-execution/patterns/best-practices/idempotency/",
+      "publisher": "Amazon Web Services",
+      "family": "practice",
+      "locator": "Idempotency and retries",
+      "finding": "At-least-once retries can repeat side effects; stable idempotency keys or at-most-once/no-retry semantics are required where duplicate effects are unsafe.",
+      "limitations": "AWS Durable Execution is a comparison model, not the factory runtime.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": ["u1", "u3"],
+      "accessed_at": "2026-09-11T10:23:00+02:00"
+    },
+    {
+      "id": "s7",
+      "url": "https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentrel06-bp04.html",
+      "publisher": "Amazon Web Services",
+      "family": "practice",
+      "locator": "Implement idempotent task execution patterns",
+      "finding": "Agentic systems should propagate stable idempotency identity through retries; unstable retry-time identifiers are a high-risk anti-pattern.",
+      "limitations": "Architectural guidance rather than evidence about ChatGPT product behavior.",
+      "status": "read",
+      "origin": "discovered",
+      "usage_ids": ["u1", "u3"],
+      "accessed_at": "2026-09-11T10:23:00+02:00"
+    },
+    {
+      "id": "s8",
+      "url": "https://temporal.io/",
+      "publisher": "Temporal",
+      "family": "practice",
+      "locator": "Durable Execution Solutions",
+      "finding": "Durable workflow state supports recovery from worker/process failure and activities can retry while preserving workflow progress.",
+      "limitations": "Vendor-level architecture statement; not direct evidence about this repository's runtime.",
+      "status": "read",
+      "origin": "discovered",
+      "usage_ids": ["u1", "u3"],
+      "accessed_at": "2026-09-11T10:23:00+02:00"
+    }
+  ],
+  "conclusions": [
+    {
+      "usage_id": "u1",
+      "source_ids": ["s1", "s3", "s6", "s7", "s5", "s8"],
+      "finding": "No new product change invalidates the current runtime; fresh reliability evidence reinforces same-occurrence recovery and stable side-effect identity.",
+      "consequence": "Keep current recovery contract and do not create a duplicate implementation issue.",
+      "decision": "retain"
+    },
+    {
+      "usage_id": "u2",
+      "source_ids": ["s1", "s2", "s3", "s4"],
+      "finding": "Event-triggered tasks remain optional/narrow and Pages configuration remains distinct from repository file publication.",
+      "consequence": "Keep the two-prompt flow and the separate Pages activation status.",
+      "decision": "retain"
+    },
+    {
+      "usage_id": "u3",
+      "source_ids": ["s5", "s6", "s7", "s8"],
+      "finding": "Cross-vendor guidance converges on checkpointed resume plus idempotency/fencing for retryable side effects.",
+      "consequence": "Existing recovery design is directionally correct; no new authority should be added to recovery triggers.",
+      "decision": "retain"
+    }
+  ],
+  "new_directions": [
+    {
+      "direction": "When issue #7 is evaluated, explicitly require a stable event identity to flow into any periodic+event deduplication key.",
+      "why": "Fresh AWS agentic/idempotency guidance reinforces that retry-time identifiers must not change across replays.",
+      "source_ids": ["s7", "s6"]
+    }
+  ]
+}
