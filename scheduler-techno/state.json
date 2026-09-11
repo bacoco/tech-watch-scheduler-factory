@@ -8,9 +8,9 @@
     "id": null
   },
   "last_completed_update": {
-    "run_id": "update-2026-09-08-001",
-    "finished_at": "2026-09-11T08:16:37+02:00",
-    "receipt_sha256": "8ae5acb15f6e0bb872552b9efd3f20de5df90ea4a9544898a0f1c0923a869b39"
+    "run_id": "update-2026-09-11-001",
+    "finished_at": "2026-09-11T10:23:41+02:00",
+    "receipt_sha256": "4a9571cfcdb30a816f85a259c7092d9287bad26cfa7320a06cd3f9fec3fc0854"
   },
   "last_postmortem_at": null,
   "phase": "UPDATE_READY",
