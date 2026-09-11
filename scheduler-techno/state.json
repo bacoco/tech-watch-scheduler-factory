@@ -21,13 +21,24 @@
     "tasks_verified": [
       {
         "title": "Factory Tech Watch",
+        "id": "6aa06a5d4504819198572f4da9fedfe3",
         "cadence": "weekly Monday morning",
-        "timezone": "Europe/Paris"
+        "timezone": "Europe/Paris",
+        "enabled": true
+      },
+      {
+        "title": "Factory Tech Watch Recovery",
+        "id": "6aa0f33f8fa4819195b2ce8a94d97cf6",
+        "cadence": "every 6 hours, only when incomplete",
+        "timezone": "Europe/Paris",
+        "enabled": true
       },
       {
         "title": "Factory Watch Review",
+        "id": "6aa06a64cb1c81919e8e410f6c3aa6b0",
         "cadence": "monthly first Friday morning",
-        "timezone": "Europe/Paris"
+        "timezone": "Europe/Paris",
+        "enabled": true
       }
     ]
   },
