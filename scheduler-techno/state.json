@@ -7,7 +7,11 @@
     "status": "superseded_by_runtime",
     "id": null
   },
-  "last_completed_update": null,
+  "last_completed_update": {
+    "run_id": "update-2026-09-08-001",
+    "finished_at": "2026-09-11T08:16:37+02:00",
+    "receipt_sha256": "8ae5acb15f6e0bb872552b9efd3f20de5df90ea4a9544898a0f1c0923a869b39"
+  },
   "last_postmortem_at": null,
   "phase": "UPDATE_READY",
   "repository": "bacoco/tech-watch-scheduler-factory",
@@ -32,7 +36,7 @@
   "website": {
     "repository": "bacoco/tech-watch-scheduler-factory-website",
     "status": "published_pages_activation_blocked",
-    "commit": "fdf652ac678324956a4f349bd376991d3f578098",
+    "commit": "5d29dfb8f87c5c596558728ec244199663a1b920",
     "pages_settings_url": "https://github.com/bacoco/tech-watch-scheduler-factory-website/settings/pages"
   }
 }

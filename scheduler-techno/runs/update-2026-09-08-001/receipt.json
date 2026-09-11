@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "kind": "update",
+  "run_id": "update-2026-09-08-001",
+  "repository": "bacoco/tech-watch-scheduler-factory",
+  "repo_sha": "2ac5979b289013ca5f8913aba7290ba0c43a3dd7",
+  "started_at": "2026-09-08T22:14:00+02:00",
+  "finished_at": "2026-09-11T08:16:37+02:00",
+  "cutoff_at": "2026-09-11T08:12:18+02:00",
+  "status": "complete",
+  "blockers": [],
+  "previous_run_id": null,
+  "source_checkpoints": {},
+  "research": "runs/update-2026-09-08-001/research.json",
+  "coverage": [
+    {
+      "question_id": "q1",
+      "status": "covered",
+      "evidence": "runs/update-2026-09-08-001/report.md",
+      "note": "OpenAI Scheduled Tasks were freshly reviewed; event-triggered tasks are a material newly discovered capability and issue #7 records the optional signal experiment."
+    },
+    {
+      "question_id": "q2",
+      "status": "covered",
+      "evidence": "runs/update-2026-09-08-001/report.md",
+      "note": "GitHub App access and Pages branch publication were rechecked; website files are committed and reread while Pages activation remains separately unverified."
+    },
+    {
+      "question_id": "q3",
+      "status": "covered",
+      "evidence": "runs/update-2026-09-08-001/report.md",
+      "note": "Current main now contains dedicated same-occurrence recovery semantics, compared against AWS, Temporal and Google retry/recovery models."
+    },
+    {
+      "question_id": "q4",
+      "status": "covered",
+      "evidence": "runs/update-2026-09-08-001/report.md",
+      "note": "The self-hosting inventory defect remains fixed; no duplicate issue is needed and the two-prompt user flow remains unchanged."
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "runs/update-2026-09-08-001/report.md",
+      "sha256": "19f7e435a7eec5406ef3ce03dc96559031242666de8d89e8961e20d38d7bec5b"
+    },
+    {
+      "path": "runs/update-2026-09-08-001/research.json",
+      "sha256": "f7fc44199b2d47a1a3cff01e3f22f3d62c3c7cfd98687e9fe46db3596cf6182a"
+    }
+  ],
+  "delivery": {
+    "status": "verified",
+    "evidence": "Issue #7 was created and reread. Public website home, archive, UPDATE 001 edition and CSS were committed and reread at website commit 5d29dfb8f87c5c596558728ec244199663a1b920. GitHub Pages activation remains a separate WEBSITE.md blocker and no live URL is claimed."
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "stage": "update",
+  "repo_sha": "2ac5979b289013ca5f8913aba7290ba0c43a3dd7",
+  "status": "complete",
+  "synthetic": false,
+  "started_at": "2026-09-11T08:06:06+02:00",
+  "finished_at": "2026-09-11T08:12:18+02:00",
+  "scope": "Reprise ciblée de la même occurrence UPDATE 001 : vérifier les changements matériels depuis le T0 sur Scheduled Tasks, GitHub/Pages, fiabilité de reprise et friction d'activation, sans ouvrir un nouveau cycle métier.",
+  "stop_reason": "Les quatre questions sont couvertes par des sources primaires récentes et des patterns multi-éditeurs; l'expansion Temporal apporte une source découverte hors liste initiale; aucun angle déterminant ne reste bloqué.",
+  "blocking_gaps": [],
+  "searches": [
+    {
+      "id": "r1",
+      "phase": "initial",
+      "query": "OpenAI Scheduled Tasks event-triggered GitHub Gmail Slack August 2026 GitHub Apps Pages",
+      "reason": "Réexaminer les capacités produit et permissions qui structurent l'activation de la factory.",
+      "trace": "Web search puis lecture OpenAI Help, OpenAI Release Notes, GitHub Docs Apps et Pages.",
+      "executed_at": "2026-09-11T08:07:00+02:00",
+      "outcome": "results",
+      "source_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    },
+    {
+      "id": "r2",
+      "phase": "expansion",
+      "query": "durable execution crash resume exactly once visibility timeout idempotency scheduler",
+      "reason": "Comparer la nouvelle tâche de reprise dédiée à des modèles de reprise hors de la liste initiale.",
+      "trace": "Recherche ouverte; lecture AWS SQS/Boto3 et découverte puis lecture Temporal durable execution.",
+      "executed_at": "2026-09-11T08:09:00+02:00",
+      "outcome": "results",
+      "source_ids": [
+        "s5",
+        "s6"
+      ]
+    },
+    {
+      "id": "r3",
+      "phase": "challenge",
+      "query": "event triggered scheduled tasks limitations GitHub pull request approvals retries duplicate delivery maximum retries",
+      "reason": "Chercher les limites qui empêchent de remplacer la veille périodique ou de supposer une exécution exactement une fois.",
+      "trace": "Relecture des limites OpenAI, comparaison duplication/visibility timeout AWS et retries bornés Google Cloud.",
+      "executed_at": "2026-09-11T08:11:00+02:00",
+      "outcome": "results",
+      "source_ids": [
+        "s1",
+        "s5",
+        "s7"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://help.openai.com/en/articles/10291617",
+      "publisher": "OpenAI",
+      "family": "official",
+      "locator": "Scheduled tasks in ChatGPT",
+      "finding": "La documentation actuelle décrit des tâches planifiées récurrentes et, dans ChatGPT Work, des tâches déclenchées par des événements Gmail, Slack ou GitHub liés aux pull requests; certaines actions peuvent nécessiter une approbation et mettre la tâche en pause.",
+      "limitations": "Disponibilité, limites et actions autorisées dépendent du plan, du workspace et des apps connectées; le déclenchement GitHub documenté n'est pas un flux universel pour tous les événements du repo.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": [
+        "u1",
+        "u2"
+      ],
+      "accessed_at": "2026-09-11T08:07:20+02:00"
+    },
+    {
+      "id": "s2",
+      "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+      "publisher": "OpenAI",
+      "family": "official",
+      "locator": "ChatGPT release notes — August 25, 2026 scheduled task updates",
+      "finding": "Les notes de version du 25 août 2026 annoncent les tâches événementielles déclenchées par des mises à jour d'apps, notamment Gmail, Slack et l'activité de pull request GitHub.",
+      "limitations": "Une note de version décrit le produit et non la disponibilité effective dans chaque compte ni la couverture de tous les événements GitHub.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": [
+        "u1",
+        "u2"
+      ],
+      "accessed_at": "2026-09-11T08:07:40+02:00"
+    },
+    {
+      "id": "s3",
+      "url": "https://docs.github.com/en/apps/using-github-apps/reviewing-and-modifying-installed-github-apps",
+      "publisher": "GitHub",
+      "family": "official",
+      "locator": "Reviewing and modifying installed GitHub Apps",
+      "finding": "L'accès d'une GitHub App peut rester limité à des repositories sélectionnés; l'accès repository et les permissions d'API restent des dimensions distinctes.",
+      "limitations": "La documentation ne prouve pas les permissions effectives du connecteur de cette exécution; celles-ci doivent être vérifiées par l'outil.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": [
+        "u1",
+        "u2"
+      ],
+      "accessed_at": "2026-09-11T08:08:00+02:00"
+    },
+    {
+      "id": "s4",
+      "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site",
+      "publisher": "GitHub",
+      "family": "official",
+      "locator": "Configuring a publishing source for your GitHub Pages site",
+      "finding": "GitHub Pages peut publier depuis une branche et la racine ou /docs; l'écriture des fichiers et l'activation effective de Pages sont deux opérations distinctes.",
+      "limitations": "La capacité d'administration de Pages n'est pas exposée par le connecteur GitHub utilisé dans cette reprise; un commit de site ne prouve donc pas une URL Pages live.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": [
+        "u1",
+        "u2"
+      ],
+      "accessed_at": "2026-09-11T08:08:20+02:00"
+    },
+    {
+      "id": "s5",
+      "url": "https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sqs/client/receive_message.html",
+      "publisher": "Amazon Web Services",
+      "family": "products",
+      "locator": "SQS receive_message visibility timeout behavior",
+      "finding": "Un message non supprimé redevient visible après le visibility timeout et peut être livré à nouveau; les effets doivent tolérer les duplications et reprises.",
+      "limitations": "SQS est un service de queue managé et non le runtime ChatGPT; il fournit un modèle de panne transférable, pas une implémentation identique.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": [
+        "u1",
+        "u3"
+      ],
+      "accessed_at": "2026-09-11T08:09:20+02:00"
+    },
+    {
+      "id": "s6",
+      "url": "https://docs.temporal.io/encyclopedia/durable-execution",
+      "publisher": "Temporal Technologies",
+      "family": "web_open",
+      "locator": "Durable Execution",
+      "finding": "L'exécution durable persiste l'avancement et reprend après crash ou panne sans recommencer volontairement le workflow depuis zéro; ce modèle renforce l'intérêt d'une reprise liée à la même occurrence.",
+      "limitations": "Temporal est une plateforme dédiée avec historique durable; la factory Git/ChatGPT n'en possède pas toutes les garanties et doit s'appuyer sur ses propres reçus/checkpoints.",
+      "status": "read",
+      "origin": "discovered",
+      "usage_ids": [
+        "u1",
+        "u3"
+      ],
+      "accessed_at": "2026-09-11T08:10:00+02:00"
+    },
+    {
+      "id": "s7",
+      "url": "https://docs.cloud.google.com/run/docs/jobs-retries",
+      "publisher": "Google Cloud",
+      "family": "products",
+      "locator": "Set maximum retries for jobs",
+      "finding": "Cloud Run Jobs borne le nombre de retries par tâche; après épuisement, le travail devient un échec plutôt qu'une boucle infinie.",
+      "limitations": "Cloud Run Jobs n'est pas le runtime ChatGPT; le point pertinent est la borne explicite des retries.",
+      "status": "read",
+      "origin": "seed",
+      "usage_ids": [
+        "u1",
+        "u3"
+      ],
+      "accessed_at": "2026-09-11T08:11:30+02:00"
+    }
+  ],
+  "conclusions": [
+    {
+      "usage_id": "u1",
+      "source_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7"
+      ],
+      "finding": "Deux changements matériels ressortent pour le mainteneur : OpenAI documente désormais des tâches événementielles, et la factory a ajouté sur main une tâche de reprise dédiée qui doit reprendre la même occurrence incomplète.",
+      "consequence": "Conserver la veille périodique comme source de vérité métier, évaluer une voie événementielle seulement comme signal optionnel, et garder la reprise same-occurrence fondée sur checkpoints avec déduplication.",
+      "decision": "retain"
+    },
+    {
+      "usage_id": "u2",
+      "source_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "finding": "Le parcours à deux prompts reste pertinent mais la documentation doit distinguer clairement planification périodique, déclenchement événementiel éventuel et activation Pages; les permissions effectives restent à vérifier.",
+      "consequence": "Ne pas ajouter de troisième étape utilisateur obligatoire; documenter l'événementiel comme option et continuer à séparer commit du site et URL Pages réellement activée.",
+      "decision": "retain"
+    },
+    {
+      "usage_id": "u3",
+      "source_ids": [
+        "s5",
+        "s6",
+        "s7"
+      ],
+      "finding": "Visibility timeout, reprise durable et retries bornés convergent avec le contrat ajouté à la factory : une occurrence non terminale doit être reprise, pas dupliquée, et la concurrence exige une preuve positive.",
+      "consequence": "Ajouter/maintenir des tests de crash après réservation, reprise de la même occurrence et absence de double effet; conserver des retries bornés.",
+      "decision": "retain"
+    }
+  ],
+  "new_directions": [
+    {
+      "direction": "Évaluer un `signal_mode: periodic | periodic+event` où un événement GitHub supporté réveille ou enrichit la prochaine occurrence sans remplacer la veille périodique.",
+      "why": "Les tâches événementielles OpenAI sont désormais documentées mais leur périmètre GitHub est plus étroit que la recherche multi-source de la factory.",
+      "source_ids": [
+        "s1",
+        "s2"
+      ]
+    },
+    {
+      "direction": "Tester explicitement le crash après réservation de la tâche dédiée et la reprise de la même occurrence sans double effet.",
+      "why": "Les modèles AWS, Temporal et Google confirment l'importance de checkpoints durables, idempotence et retries bornés.",
+      "source_ids": [
+        "s5",
+        "s6",
+        "s7"
+      ]
+    }
+  ]
+}
