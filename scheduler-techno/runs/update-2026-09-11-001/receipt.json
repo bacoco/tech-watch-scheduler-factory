@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "kind": "update",
+  "run_id": "update-2026-09-11-001",
+  "repository": "bacoco/tech-watch-scheduler-factory",
+  "repo_sha": "111e52313ae2ea070685a3b6bf4761bb0ca07353",
+  "started_at": "2026-09-11T10:21:21+02:00",
+  "finished_at": "2026-09-11T10:23:41+02:00",
+  "cutoff_at": "2026-09-11T10:23:41+02:00",
+  "status": "complete",
+  "blockers": [],
+  "previous_run_id": "update-2026-09-08-001",
+  "source_checkpoints": {},
+  "research": "runs/update-2026-09-11-001/research.json",
+  "coverage": [
+    {
+      "question_id": "q1",
+      "status": "covered",
+      "evidence": "runs/update-2026-09-11-001/report.md",
+      "note": "OpenAI Scheduled Tasks and Work documentation was reread; event-triggered GitHub PR activity remains the already-tracked optional signal in issue #7, with no new product change requiring another issue."
+    },
+    {
+      "question_id": "q2",
+      "status": "covered",
+      "evidence": "runs/update-2026-09-11-001/report.md",
+      "note": "GitHub App permissions and Pages publishing documentation were reread; repository file delivery remains distinct from Pages activation and the connector still exposes no usable Pages endpoint."
+    },
+    {
+      "question_id": "q3",
+      "status": "covered",
+      "evidence": "runs/update-2026-09-11-001/report.md",
+      "note": "AWS, Microsoft and Temporal recovery/idempotency guidance reinforces stable retry identity, checkpointed resume and fencing non-idempotent side effects; the existing same-occurrence recovery contract already matches the relevant pattern."
+    },
+    {
+      "question_id": "q4",
+      "status": "covered",
+      "evidence": "runs/update-2026-09-11-001/report.md",
+      "note": "No new evidence justifies changing the two-prompt activation flow or adding another mandatory step; issue #7 remains the sole optional event-signal experiment."
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "runs/update-2026-09-11-001/report.md",
+      "sha256": "0442a337b2583c625e8e4cd010cc3d4e9e38dcd24b62d933cfbf8a839698b807"
+    },
+    {
+      "path": "runs/update-2026-09-11-001/research.json",
+      "sha256": "e30f8903278cfa89b6735e5116a81750f7a4ef16bb6f95a9d76ced490a3ec8b5"
+    }
+  ],
+  "delivery": {
+    "status": "verified",
+    "evidence": "No material public delta was found, so WEBSITE.md requires no duplicate edition. The public website repository was reread at unchanged commit 5d29dfb8f87c5c596558728ec244199663a1b920. GitHub Pages activation remains separately blocked/unverified and no live Pages URL is claimed. No new issue was created; issue #7 was reread and remains the existing event-triggered-task proposal."
+  }
+}
